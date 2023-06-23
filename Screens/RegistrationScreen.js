@@ -10,10 +10,10 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import styles from "./RegistrationScreenStyles";
+import styles from "./RegistrationAndLoginScreenStyles";
 import { useState } from "react";
 import { SvgXml } from "react-native-svg";
-import addSvg from "../images/add.svg";
+import addSvg from "../images/add.svg.js";
 
 export function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);

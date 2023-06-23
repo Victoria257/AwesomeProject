@@ -23,11 +23,11 @@ export default function App() {
   const fontFamily = fontsLoaded ? "Roboto-Medium" : "sans-serif";
 
   return (
-    <View style={styles.container}>
-      <RegistrationScreen fontFamily={fontFamily} />
-      {/* <LoginScreen />
-      <PostsScreen />
-      <Text>Open up App.js to start working on your app!</Text> */}
+    <View style={styles.container} fontFamily={fontFamily}>
+      {/* <RegistrationScreen  /> */}
+      <LoginScreen />
+      {/* <PostsScreen /> */}
+      {/* <Text>Open up App.js to start working on your app!</Text> */}
       <StatusBar style="auto" />
     </View>
   );
