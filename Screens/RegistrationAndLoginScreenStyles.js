@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     color: "#BDBDBD",
     borderWidth: 1,
-    borderColor: "#E8E8E8",
     borderRadius: 8,
     fontSize: 16,
     fontWeight: "400",
@@ -85,16 +84,11 @@ const styles = StyleSheet.create({
     right: 32,
     backgroundColor: "transparent",
   },
-  buttonRegisterText: {
-    color: "#1B4371",
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
-  },
   buttonRegisterBox: {
     width: "100%",
     marginTop: 43,
   },
+
   buttonRegister: {
     backgroundColor: "#FF6C00",
     marginLeft: 16,
@@ -103,6 +97,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 100,
   },
+
   buttonRegisterText: {
     color: "#FFFFFF",
     fontWeight: "400",

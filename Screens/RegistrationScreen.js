@@ -17,6 +17,7 @@ import addSvg from "../images/add.svg.js";
 
 export function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isActiveInput, setIsActiveInput] = useState(null);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -46,31 +47,54 @@ export function RegistrationScreen() {
               <Text style={styles.title}>Реєстрація</Text>
               <View style={styles.listInput}>
                 <TextInput
-                  style={[styles.input, { marginBottom: 16 }]}
+                  style={[
+                    styles.input,
+                    { marginBottom: 16 },
+                    {
+                      borderColor:
+                        isActiveInput === "login" ? "#FF6C00" : "#E8E8E8",
+                    },
+                  ]}
                   placeholder="Логін"
                   keyboardType="default"
                   maxLength={20}
                   onFocus={() => {
                     setIsShowKeyboard(true);
+                    setIsActiveInput("login");
                   }}
                 />
                 <TextInput
-                  style={[styles.input, { marginBottom: 16 }]}
+                  style={[
+                    styles.input,
+                    { marginBottom: 16 },
+                    {
+                      borderColor:
+                        isActiveInput === "email" ? "#FF6C00" : "#E8E8E8",
+                    },
+                  ]}
                   placeholder="Адреса електронної пошти"
                   keyboardType="email-address"
                   onFocus={() => {
                     setIsShowKeyboard(true);
+                    setIsActiveInput("email");
                   }}
                 />
                 <View>
                   <TextInput
-                    style={styles.input}
+                    style={[
+                      styles.input,
+                      {
+                        borderColor:
+                          isActiveInput === "password" ? "#FF6C00" : "#E8E8E8",
+                      },
+                    ]}
                     placeholder="Пароль"
                     keyboardType="default"
                     secureTextEntry={true}
                     maxLength={20}
                     onFocus={() => {
                       setIsShowKeyboard(true);
+                      setIsActiveInput("password");
                     }}
                   />
                   <TouchableOpacity style={styles.buttonShow}>
