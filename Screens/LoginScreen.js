@@ -15,11 +15,20 @@ import { useState } from "react";
 export function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isActiveInput, setIsActiveInput] = useState(null);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+
+  const enterForm = () => {
+    console.log([email, password]);
+    setEmail("");
+    setPassword("");
+  };
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
@@ -52,12 +61,16 @@ export function LoginScreen() {
                         isActiveInput === "email" ? "#FF6C00" : "#E8E8E8",
                     },
                   ]}
+                  value={email}
                   placeholder="Адреса електронної пошти"
+                  placeholderTextColor="#BDBDBD"
                   keyboardType="email-address"
+                  onChangeText={setEmail}
                   onFocus={() => {
                     setIsShowKeyboard(true);
                     setIsActiveInput("email");
                   }}
+                  onBlur={keyboardHide}
                 />
                 <View>
                   <TextInput
@@ -68,14 +81,18 @@ export function LoginScreen() {
                           isActiveInput === "password" ? "#FF6C00" : "#E8E8E8",
                       },
                     ]}
+                    value={password}
                     placeholder="Пароль"
+                    placeholderTextColor="#BDBDBD"
                     keyboardType="default"
                     secureTextEntry={true}
                     maxLength={20}
+                    onChangeText={setPassword}
                     onFocus={() => {
                       setIsShowKeyboard(true);
                       setIsActiveInput("password");
                     }}
+                    onBlur={keyboardHide}
                   />
                   <TouchableOpacity style={styles.buttonShow}>
                     <Text style={styles.buttonShowText}>Показати</Text>
@@ -85,7 +102,7 @@ export function LoginScreen() {
               <View style={styles.buttonRegisterBox}>
                 <TouchableOpacity
                   style={styles.buttonRegister}
-                  onPress={keyboardHide}
+                  onPress={enterForm}
                 >
                   <Text style={styles.buttonRegisterText}>Увійти</Text>
                 </TouchableOpacity>

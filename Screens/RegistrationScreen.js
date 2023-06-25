@@ -18,11 +18,22 @@ import addSvg from "../images/add.svg.js";
 export function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isActiveInput, setIsActiveInput] = useState(null);
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+
+  const registerForm = () => {
+    console.log([login, email, password]);
+    setEmail("");
+    setLogin("");
+    setPassword("");
+  };
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
@@ -55,13 +66,17 @@ export function RegistrationScreen() {
                         isActiveInput === "login" ? "#FF6C00" : "#E8E8E8",
                     },
                   ]}
+                  value={login}
                   placeholder="Логін"
+                  placeholderTextColor="#BDBDBD"
                   keyboardType="default"
                   maxLength={20}
+                  onChangeText={setLogin}
                   onFocus={() => {
                     setIsShowKeyboard(true);
                     setIsActiveInput("login");
                   }}
+                  onBlur={keyboardHide}
                 />
                 <TextInput
                   style={[
@@ -72,12 +87,16 @@ export function RegistrationScreen() {
                         isActiveInput === "email" ? "#FF6C00" : "#E8E8E8",
                     },
                   ]}
+                  value={email}
                   placeholder="Адреса електронної пошти"
+                  placeholderTextColor="#BDBDBD"
                   keyboardType="email-address"
+                  onChangeText={setEmail}
                   onFocus={() => {
                     setIsShowKeyboard(true);
                     setIsActiveInput("email");
                   }}
+                  onBlur={keyboardHide}
                 />
                 <View>
                   <TextInput
@@ -88,29 +107,35 @@ export function RegistrationScreen() {
                           isActiveInput === "password" ? "#FF6C00" : "#E8E8E8",
                       },
                     ]}
+                    value={password}
                     placeholder="Пароль"
+                    placeholderTextColor="#BDBDBD"
                     keyboardType="default"
                     secureTextEntry={true}
                     maxLength={20}
+                    onChangeText={setPassword}
                     onFocus={() => {
                       setIsShowKeyboard(true);
                       setIsActiveInput("password");
                     }}
+                    onBlur={keyboardHide}
                   />
                   <TouchableOpacity style={styles.buttonShow}>
                     <Text style={styles.buttonShowText}>Показати</Text>
                   </TouchableOpacity>
+                  <View style={styles.buttonRegisterBox}>
+                    <TouchableOpacity
+                      style={styles.buttonRegister}
+                      onPress={registerForm}
+                    >
+                      <Text style={styles.buttonRegisterText}>
+                        Зареєструватися
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
 
-              <View style={styles.buttonRegisterBox}>
-                <TouchableOpacity
-                  style={styles.buttonRegister}
-                  onPress={keyboardHide}
-                >
-                  <Text style={styles.buttonRegisterText}>Зареєструватися</Text>
-                </TouchableOpacity>
-              </View>
               <TouchableOpacity>
                 <Text style={styles.loginText}>Вже є акаунт? Увійти</Text>
               </TouchableOpacity>
