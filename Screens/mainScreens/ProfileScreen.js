@@ -1,9 +1,11 @@
+import React from "react";
+
 import { StyleSheet, Text, View } from "react-native";
 
-export function PostsScreen() {
+export function ProfileScreen() {
   return (
     <View>
-      <Text>PostsScreen</Text>
+      <Text>ProfileScreen</Text>
     </View>
   );
 }

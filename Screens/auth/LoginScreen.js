@@ -1,3 +1,4 @@
+import React from "react";
 import {
   ImageBackground,
   Text,
@@ -12,7 +13,7 @@ import {
 import styles from "./RegistrationAndLoginScreenStyles";
 import { useState } from "react";
 
-export function LoginScreen() {
+export function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isActiveInput, setIsActiveInput] = useState(null);
   const [password, setPassword] = useState("");
@@ -24,6 +25,7 @@ export function LoginScreen() {
   };
 
   const enterForm = () => {
+    navigation.navigate("Home");
     console.log([email, password]);
     setEmail("");
     setPassword("");
@@ -33,7 +35,7 @@ export function LoginScreen() {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../images/bg.png")}
+          source={require("../../images/bg.png")}
           resizeMode="cover"
           style={styles.backgroundImage}
         >
@@ -107,7 +109,7 @@ export function LoginScreen() {
                   <Text style={styles.buttonRegisterText}>Увійти</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                 <Text style={styles.loginText}>
                   Немає акаунту?{" "}
                   <Text style={{ textDecorationLine: "underline" }}>

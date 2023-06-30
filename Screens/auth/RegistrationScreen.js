@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Image,
   ImageBackground,
@@ -13,9 +15,9 @@ import {
 import styles from "./RegistrationAndLoginScreenStyles";
 import { useState } from "react";
 import { SvgXml } from "react-native-svg";
-import addSvg from "../images/add.svg.js";
+import addSvg from "../../images/add.svg.js";
 
-export function RegistrationScreen() {
+export function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isActiveInput, setIsActiveInput] = useState(null);
   const [login, setLogin] = useState("");
@@ -28,6 +30,7 @@ export function RegistrationScreen() {
   };
 
   const registerForm = () => {
+    navigation.navigate("Home");
     console.log([login, email, password]);
     setEmail("");
     setLogin("");
@@ -38,7 +41,7 @@ export function RegistrationScreen() {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../images/bg.png")}
+          source={require("../../images/bg.png")}
           resizeMode="cover"
           style={styles.backgroundImage}
         >
@@ -136,7 +139,7 @@ export function RegistrationScreen() {
                 </View>
               </View>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                 <Text style={styles.loginText}>Вже є акаунт? Увійти</Text>
               </TouchableOpacity>
             </ScrollView>
