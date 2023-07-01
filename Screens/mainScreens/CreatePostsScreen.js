@@ -1,10 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text } from "react-native";
 
-export function CreatePostScreen() {
+export const CreatePostScreen = ({ navigation }) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Створити публікацію",
+    });
+  }, [navigation]);
+
   return (
     <View>
-      <Text>CreatePostScreen</Text>
+      <Text>Create Post Screen</Text>
     </View>
   );
-}
+};

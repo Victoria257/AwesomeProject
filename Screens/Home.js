@@ -5,90 +5,88 @@ import { ProfileScreen } from "./mainScreens/ProfileScreen";
 import { PostsScreen } from "./mainScreens/PostsScreen";
 import { Image, StyleSheet, View } from "react-native";
 
+import { Feather } from "@expo/vector-icons";
+import {
+  getFocusedRouteNameFromRoute,
+  useRoute,
+} from "@react-navigation/native";
+
 const Tabs = createBottomTabNavigator();
 
-const CustomTabBarIcon = ({ focused, iconName, route }) => {
-  const isPostsTab = route.name === "Posts";
-  const isCreatePostsTab = route.name === "CreatePosts";
-  const isProfileTab = route.name === "Profile";
-  let iconBackground;
-  let iconOrder;
-
-  if (isPostsTab) {
-  } else if (isProfileTab) {
-    iconBackground = focused ? "orange" : null;
-    iconOrder = focused ? 1 : 2;
-  }
-  return (
-    <View
-      style={[
-        styles.tabBarIcon,
-        iconBackground && { backgroundColor: iconBackground },
-        iconOrder && { order: iconOrder },
-      ]}
-    >
-      <Image
-        source={iconName}
-        fadeDuration={0}
-        style={{ width: 40, height: 40 }}
-      />
-    </View>
-  );
-};
-
 export const Home = () => {
+  const route = useRoute();
+  const routeName = getFocusedRouteNameFromRoute(route);
+
   return (
     <Tabs.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === "Posts") {
-            iconName = require("../images/icons/toolbar.png");
-          } else if (route.name === "CreatePosts") {
-            iconName = require("../images/icons/plus2.png");
-          } else if (route.name === "Profile") {
-            iconName = focused
-              ? require("../images/icons/user-focused-2.png")
-              : require("../images/icons/user.png");
-          }
-          return (
-            <CustomTabBarIcon
-              focused={focused}
-              iconName={iconName}
-              route={route}
-            />
-          );
-        },
-        // tabBarStyle: {
-        //   display: "flex",
-        // },
+      screenOptions={() => ({
         tabBarShowLabel: false,
       })}
     >
-      <Tabs.Screen name="Posts" component={PostsScreen} />
+      <Tabs.Screen
+        name="Posts"
+        component={PostsScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return <Feather name="grid" size={24} color={"#212121CC"} />;
+          },
+        }}
+      />
       <Tabs.Screen
         name="CreatePosts"
         component={CreatePostScreen}
-        options={{
+        options={() => ({
           tabBarStyle: { display: "none" },
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <View
+                style={
+                  routeName === "Profile" ? styles.tabBarIcon : styles.focusIcon
+                }
+              >
+                <Feather
+                  name="plus"
+                  size={24}
+                  color={routeName === "Profile" ? "#212121CC" : "#FFFFFF"}
+                />
+              </View>
+            );
+          },
+        })}
+      />
+      <Tabs.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <View style={focused ? styles.focusIcon : styles.tabBarIcon}>
+                <Feather
+                  name="user"
+                  size={24}
+                  color={focused ? "#FFFFFF" : "#212121CC"}
+                />
+              </View>
+            );
+          },
         }}
       />
-      <Tabs.Screen name="Profile" component={ProfileScreen} />
     </Tabs.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
-  tabBarStyle: {
-    display: "flex",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  tabBarIcon: {
+  focusIcon: {
+    backgroundColor: "orange",
     width: 70,
     height: 40,
     borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    color: "red",
+  },
+
+  tabBarIcon: {
     alignItems: "center",
     justifyContent: "center",
   },

@@ -7,33 +7,26 @@ const AuthStack = createStackNavigator();
 const MainStack = createStackNavigator();
 
 export const useRoutes = (isAuth) => {
-  //   if (!isAuth) {
-  return (
-    <>
+  if (!isAuth) {
+    return (
       <AuthStack.Navigator
         initialRouteName="Login"
-        // options={{ title: "Start screen" }}
-        // style={styles.container}
-        // fontFamily={fontFamily}
+        screenOptions={{ headerShown: false }}
       >
-        <AuthStack.Screen
-          options={{ headerShown: false }}
-          name="Register"
-          component={RegistrationScreen}
-        />
-        <AuthStack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={LoginScreen}
-        />
+        <AuthStack.Screen name="Register" component={RegistrationScreen} />
+        <AuthStack.Screen name="Login" component={LoginScreen} />
         <AuthStack.Screen name="Home" component={Home} />
       </AuthStack.Navigator>
-    </>
+    );
+  }
+  return (
+    <MainStack.Navigator
+      screenOptions={{
+        headerLeft: null,
+        headerTitle: null,
+      }}
+    >
+      <MainStack.Screen name="Home" component={Home} />
+    </MainStack.Navigator>
   );
-  //   }
-  //   return (
-  //     <MainStack.Navigator>
-  //       <MainStack.Screen name="Home" component={Home} />;
-  //     </MainStack.Navigator>
-  //   );
 };
