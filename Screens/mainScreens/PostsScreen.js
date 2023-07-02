@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import { View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
+import { Feather } from "@expo/vector-icons";
+
 export const PostsScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -13,11 +15,11 @@ export const PostsScreen = ({ navigation }) => {
       //  headerStyle:{styles.headerStyle},
       // headerStyle:
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Image
-            source={require("../../images/icons/log-out.png")}
-            style={styles.logoutButton}
-          />
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Feather name="log-out" size={24} color="#BDBDBD" />
         </TouchableOpacity>
       ),
     });
