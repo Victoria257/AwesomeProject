@@ -42,7 +42,11 @@ export const CreatePostScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.photo}>
-          <OpenCamera photo={photo} setPhoto={setPhoto} />
+          <OpenCamera
+            photo={photo}
+            setPhoto={setPhoto}
+            navigation={navigation}
+          />
         </View>
         <Text style={styles.textUnderPhoto}>Завантажте фото</Text>
         <View style={styles.form}>

@@ -5,7 +5,7 @@ import * as MediaLibrary from "expo-media-library";
 import styles from "./OpenCameraStyles.js";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-export default function OpenCamera({ photo, setPhoto }) {
+export default function OpenCamera({ photo, setPhoto, navigation }) {
   const [camera, setCamera] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   // const [type, setType] = useState(Camera.Constants.Type.back);
@@ -18,6 +18,31 @@ export default function OpenCamera({ photo, setPhoto }) {
       setHasPermission(status === "granted");
     })();
   }, []);
+
+  useEffect(() => {
+    const handleBlur = () => {
+      if (camera) {
+        camera.pausePreview();
+        setHasPermission(null);
+      }
+    };
+
+    const handleFocus = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+      if (camera) {
+        camera.resumePreview();
+      }
+    };
+
+    const unsubscribeBlur = navigation.addListener("blur", handleBlur);
+    const unsubscribeFocus = navigation.addListener("focus", handleFocus);
+
+    return () => {
+      unsubscribeBlur();
+      unsubscribeFocus();
+    };
+  }, [navigation, camera, hasPermission]);
 
   if (hasPermission === null) {
     return <View />;
