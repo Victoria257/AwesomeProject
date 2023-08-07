@@ -32,21 +32,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     backgroundColor: "#F6F6F6",
-    //border-radius: 8px;
-    //border: 1px solid #E8E8E8;
     borderRadius: 8,
-    borderColor: "#E8E8E8",
-    justifyContent: "center",
-    alignItems: "center",
+    overflow: "hidden",
   },
-  circle: {
-    backgroundColor: "#FFFFFF",
-    width: 60,
-    height: 60,
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   textUnderPhoto: {
     color: "#BDBDBD",
     fontSize: 16,

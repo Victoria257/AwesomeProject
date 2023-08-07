@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { View, Text, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
 
-export const PostsScreen = ({ navigation }) => {
+export const PostsScreen = ({ navigation, route }) => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (route.params) {
+      setPosts((prevState) => [...prevState, route.params]);
+    }
+  }, [route.params]);
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Публікації",
@@ -27,7 +35,16 @@ export const PostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Posts Screen</Text>
+      {/* <Text>Posts Screen</Text> */}
+      <FlatList
+        data={posts}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.photoContainer}>
+            <Image source={{ uri: item.photo }} style={styles.photo} />
+          </View>
+        )}
+      ></FlatList>
     </View>
   );
 };
@@ -50,5 +67,12 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
+  },
+  photoContainer: {
+    marginTop: 10,
+  },
+  photo: {
+    height: 200,
+    width: 200,
   },
 });

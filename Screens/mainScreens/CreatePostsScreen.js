@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text } from "react-native";
-import styles from "./PostsStyles";
 
-import { FontAwesome5 } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
 
+import styles from "./PostsStyles";
+import OpenCamera from "../../Components/OpenCamera";
+
 export const CreatePostScreen = ({ navigation }) => {
+  const [photo, setPhoto] = useState("");
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Створити публікацію",
@@ -18,7 +21,7 @@ export const CreatePostScreen = ({ navigation }) => {
       },
       headerTitleStyle: styles.headerTitleStyle,
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
           <Feather
             style={styles.arrowLeft}
             name="arrow-left"
@@ -30,13 +33,16 @@ export const CreatePostScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const sendPhoto = () => {
+    navigation.navigate("Posts", { photo });
+    setPhoto("");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.photo}>
-          <View style={styles.circle}>
-            <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
-          </View>
+          <OpenCamera photo={photo} setPhoto={setPhoto} />
         </View>
         <Text style={styles.textUnderPhoto}>Завантажте фото</Text>
         <View style={styles.form}>
@@ -60,10 +66,7 @@ export const CreatePostScreen = ({ navigation }) => {
               placeholderTextColor={"#BDBDBD"}
             />
           </View>
-          <TouchableOpacity
-            style={styles.formButton}
-            onPress={() => navigation.navigate("Login")}
-          >
+          <TouchableOpacity style={styles.formButton} onPress={sendPhoto}>
             <Text style={styles.textButton}>Опубліковати</Text>
           </TouchableOpacity>
         </View>
