@@ -60,20 +60,18 @@ export default function OpenCamera({ photo, setPhoto, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} ref={setCamera}>
-        {photo && (
-          <View style={styles.takePhotoContainer}>
-            <Image source={{ uri: photo }} style={styles.preview} />
-          </View>
-        )}
-
+    <Camera style={styles.camera} ref={setCamera}>
+      {photo ? (
+        <View style={styles.takePhotoContainer}>
+          <Image source={{ uri: photo }} style={styles.preview} />
+        </View>
+      ) : (
         <TouchableOpacity style={styles.snapContainer} onPress={takePhoto}>
           <Text style={styles.snap}>
             <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
           </Text>
         </TouchableOpacity>
-      </Camera>
-    </View>
+      )}
+    </Camera>
   );
 }

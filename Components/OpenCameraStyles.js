@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-  },
   camera: {
     // aspectRatio: 1,
     width: "100%",
@@ -29,16 +25,13 @@ const styles = StyleSheet.create({
   },
 
   takePhotoContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-
-    borderColor: "#fff",
-    borderWidth: 3,
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
   },
   preview: {
-    width: 130,
-    height: 130,
+    width: "100%",
+    height: "100%",
   },
 
   photoView: {
