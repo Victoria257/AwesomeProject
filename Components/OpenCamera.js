@@ -7,11 +7,30 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function OpenCamera({ photo, setPhoto }) {
   const [camera, setCamera] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  // const [type, setType] = useState(Camera.Constants.Type.back);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   const takePhoto = async () => {
     if (camera) {
-      const photo = await camera.takePictureAsync();
-      setPhoto(photo.uri);
+      const { uri } = await camera.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
     }
   };
 

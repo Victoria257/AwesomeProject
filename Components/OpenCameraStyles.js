@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   camera: {
+    // aspectRatio: 1,
     width: "100%",
     height: "100%",
     marginRight: "auto",
