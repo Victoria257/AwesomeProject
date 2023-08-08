@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import styles from "./PostStyles.js";
 
-export const Post = ({ posts }) => {
+export const Post = ({ posts, navigation }) => {
   return (
     <FlatList
       data={posts}
@@ -18,10 +18,16 @@ export const Post = ({ posts }) => {
             <View>
               <Text style={styles.title}>{item.title}</Text>
               <View style={styles.signatureContainer}>
-                <View style={styles.commentsContainer}>
+                <TouchableOpacity
+                  style={styles.commentsContainer}
+                  onPress={() => {
+                    console.log("Comments");
+                    navigation.navigate("Comments", { uri: item.photo });
+                  }}
+                >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
                   <Text style={{ color: "#BDBDBD" }}>0</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.locationContainer}>
                   <Feather name="map-pin" size={24} color="#BDBDBD" />
                   <Text>{item.location}</Text>

@@ -47,7 +47,7 @@ export const PostsScreen = ({ navigation, route }) => {
           <Text style={styles.userEmail}>Email@gmail.com</Text>
         </View>
       </View>
-      <Post posts={posts} />
+      <Post posts={posts} navigation={navigation} />
     </View>
   );
 };
