@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  item: {
+  set: {
     marginTop: 16,
     marginBottom: 18,
     marginLeft: "auto",
     marginRight: "auto",
   },
-  photoContainer: {},
+
   photo: {
     width: "100%",
     aspectRatio: 4 / 3,
@@ -41,3 +41,5 @@ const styles = StyleSheet.create({
     gap: 4,
   },
 });
+
+export default styles;

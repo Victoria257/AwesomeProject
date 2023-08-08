@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Keyboard } from "react-native";
 
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
 
-import styles from "./PostsStyles";
+import styles from "./CreatePostsScreenStyles";
 import OpenCamera from "../../Components/OpenCamera/OpenCamera";
 
 export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [isActiveInput, setIsActiveInput] = useState(null);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,8 +66,10 @@ export const CreatePostScreen = ({ navigation }) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
+              value={title}
               placeholder="Назва..."
               placeholderTextColor={"#BDBDBD"}
+              keyboardType="default"
               onChangeText={onChangeTitle}
             />
           </View>
@@ -79,8 +82,10 @@ export const CreatePostScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.input}
+              value={location}
               placeholder="Місцевість..."
               placeholderTextColor={"#BDBDBD"}
+              keyboardType="default"
               onChangeText={onChangeLocation}
             />
           </View>
