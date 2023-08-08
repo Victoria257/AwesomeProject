@@ -35,13 +35,36 @@ export const PostsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text>Posts Screen</Text> */}
+      <View style={styles.userContainer}>
+        <View style={styles.userPhoto}>
+          <Feather name="user" size={24} color="black" />
+        </View>
+        <View style={styles.userData}>
+          <Text style={styles.userName}>Вікторія</Text>
+          <Text style={styles.userEmail}>Email@gmail.com</Text>
+        </View>
+      </View>
       <FlatList
         data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View style={styles.photoContainer}>
-            <Image source={{ uri: item.photo }} style={styles.photo} />
+          <View style={styles.item}>
+            <View style={styles.photoContainer}>
+              <Image source={{ uri: item.photo }} style={styles.photo} />
+            </View>
+            <View>
+              <Text style={styles.title}>{item.title}</Text>
+              <View style={styles.signatureContainer}>
+                <View style={styles.commentsContainer}>
+                  <Feather name="message-circle" size={24} color="#BDBDBD" />
+                  <Text style={{ color: "#BDBDBD" }}>0</Text>
+                </View>
+                <View style={styles.locationContainer}>
+                  <Feather name="map-pin" size={24} color="#BDBDBD" />
+                  <Text>{item.location}</Text>
+                </View>
+              </View>
+            </View>
           </View>
         )}
       ></FlatList>
@@ -66,13 +89,79 @@ const styles = StyleSheet.create({
     letterSpacing: -0.408,
   },
   container: {
-    alignItems: "center",
+    flex: 1,
+    paddingRight: 16,
+    paddingLeft: 16,
   },
-  photoContainer: {
-    marginTop: 10,
+  item: {
+    marginTop: 16,
+    marginBottom: 18,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
+  photoContainer: {},
   photo: {
-    height: 200,
-    width: 200,
+    width: "100%",
+    aspectRatio: 4 / 3,
+    borderRadius: 8,
+  },
+  userContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 32,
+    marginBottom: 16,
+  },
+  userPhoto: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: "gray",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  userName: {
+    color: "#212121",
+    // fontFamily: Roboto,
+    fontSize: 13,
+    fontStyle: "normal",
+    fontWeight: 700,
+  },
+  userEmail: {
+    color: "rgba(33, 33, 33, 0.80)",
+    // fontFamily: Roboto,
+    fontSize: 11,
+    fontStyle: "normal",
+    fontWeight: 400,
+  },
+  userData: {
+    marginLeft: 8,
+  },
+
+  title: {
+    marginTop: 8,
+    color: "#212121",
+    // fontFamily: Roboto,
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: 500,
+  },
+  signatureContainer: {
+    marginTop: 8,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  commentsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 6,
+    marginRight: 25,
+    color: "#BDBDBD",
+  },
+  locationContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
   },
 });

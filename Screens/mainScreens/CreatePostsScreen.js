@@ -6,10 +6,12 @@ import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 
 import styles from "./PostsStyles";
-import OpenCamera from "../../Components/OpenCamera";
+import OpenCamera from "../../Components/OpenCamera/OpenCamera";
 
 export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,9 +35,19 @@ export const CreatePostScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const onChangeTitle = (text) => {
+    setTitle(text);
+  };
+
+  const onChangeLocation = (text) => {
+    setLocation(text);
+  };
+
   const sendPhoto = () => {
-    navigation.navigate("Posts", { photo });
+    navigation.navigate("Posts", { photo, title, location });
     setPhoto("");
+    setTitle("");
+    setLocation("");
   };
 
   return (
@@ -55,6 +67,7 @@ export const CreatePostScreen = ({ navigation }) => {
               style={styles.input}
               placeholder="Назва..."
               placeholderTextColor={"#BDBDBD"}
+              onChangeText={onChangeTitle}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -68,6 +81,7 @@ export const CreatePostScreen = ({ navigation }) => {
               style={styles.input}
               placeholder="Місцевість..."
               placeholderTextColor={"#BDBDBD"}
+              onChangeText={onChangeLocation}
             />
           </View>
           <TouchableOpacity style={styles.formButton} onPress={sendPhoto}>

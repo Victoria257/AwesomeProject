@@ -21,6 +21,7 @@ export const Home = () => {
     <Tabs.Navigator
       screenOptions={() => ({
         tabBarShowLabel: false,
+        tabBarStyle: styles.container,
       })}
     >
       <Tabs.Screen
@@ -76,6 +77,11 @@ export const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 9,
+    paddingBottom: 22,
+    height: 71,
+  },
   focusIcon: {
     backgroundColor: "orange",
     width: 70,
