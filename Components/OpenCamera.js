@@ -3,12 +3,12 @@ import { Text, View, TouchableOpacity, Image } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import styles from "./OpenCameraStyles.js";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function OpenCamera({ photo, setPhoto, navigation }) {
   const [camera, setCamera] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
-  // const [type, setType] = useState(Camera.Constants.Type.back);
+  const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
     (async () => {
@@ -59,18 +59,35 @@ export default function OpenCamera({ photo, setPhoto, navigation }) {
     }
   };
 
+  const flipPhoto = () => {
+    setType(
+      type === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back
+    );
+  };
+
   return (
-    <Camera style={styles.camera} ref={setCamera}>
+    <Camera style={styles.camera} ref={setCamera} type={type}>
       {photo ? (
         <View style={styles.takePhotoContainer}>
           <Image source={{ uri: photo }} style={styles.preview} />
         </View>
       ) : (
-        <TouchableOpacity style={styles.snapContainer} onPress={takePhoto}>
-          <Text style={styles.snap}>
-            <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
-          </Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.flipContainer} onPress={flipPhoto}>
+            <MaterialCommunityIcons
+              name="camera-flip-outline"
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.snapContainer} onPress={takePhoto}>
+            <Text style={styles.snap}>
+              <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </Camera>
   );

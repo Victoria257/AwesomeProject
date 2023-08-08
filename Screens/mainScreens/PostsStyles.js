@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     overflow: "hidden",
+    justifyContent: "space-around",
   },
 
   textUnderPhoto: {
