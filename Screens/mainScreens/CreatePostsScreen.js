@@ -12,6 +12,9 @@ export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [address, setAddress] = useState("");
   const [isActiveInput, setIsActiveInput] = useState(null);
 
   React.useLayoutEffect(() => {
@@ -24,7 +27,7 @@ export const CreatePostScreen = ({ navigation }) => {
       },
       headerTitleStyle: styles.headerTitleStyle,
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
+        <TouchableOpacity onPress={() => navigation.navigate("DefaultScreen")}>
           <Feather
             style={styles.arrowLeft}
             name="arrow-left"
@@ -45,10 +48,20 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const sendPhoto = () => {
-    navigation.navigate("Posts", { photo, title, location });
+    navigation.navigate("DefaultScreen", {
+      photo,
+      title,
+      location,
+      latitude,
+      longitude,
+      address,
+    });
     setPhoto("");
     setTitle("");
     setLocation("");
+    setLatitude("");
+    setLongitude("");
+    setAddress("");
   };
 
   return (
@@ -58,6 +71,9 @@ export const CreatePostScreen = ({ navigation }) => {
           <OpenCamera
             photo={photo}
             setPhoto={setPhoto}
+            setLatitude={setLatitude}
+            setLongitude={setLongitude}
+            setAddress={setAddress}
             navigation={navigation}
           />
         </View>

@@ -21,17 +21,24 @@ export const Post = ({ posts, navigation }) => {
                 <TouchableOpacity
                   style={styles.commentsContainer}
                   onPress={() => {
-                    console.log("Comments");
                     navigation.navigate("Comments", { uri: item.photo });
                   }}
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
                   <Text style={{ color: "#BDBDBD" }}>0</Text>
                 </TouchableOpacity>
-                <View style={styles.locationContainer}>
+                <TouchableOpacity
+                  style={styles.locationContainer}
+                  onPress={() => {
+                    navigation.navigate("Map", {
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    });
+                  }}
+                >
                   <Feather name="map-pin" size={24} color="#BDBDBD" />
-                  <Text>{item.location}</Text>
-                </View>
+                  <Text>{item.location ? item.location : item.address}</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

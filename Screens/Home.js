@@ -1,12 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { CreatePostScreen } from "./mainScreens/CreatePostsScreen";
 import { ProfileScreen } from "./mainScreens/ProfileScreen";
 import { PostsScreen } from "./mainScreens/PostsScreen";
-import { CommentsScreen } from "./CommentsScreen/CommentsScreen";
-import { MapScreen } from "./MapScreen";
 
 import { Feather } from "@expo/vector-icons";
 import {
@@ -15,15 +12,6 @@ import {
 } from "@react-navigation/native";
 
 const Tabs = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-const PostsStack = () => (
-  <Stack.Navigator>
-    <Stack.Screen name="Posts" component={PostsScreen} />
-    <Stack.Screen name="Comments" component={CommentsScreen} />
-    <Stack.Screen name="Map" component={MapScreen} />
-  </Stack.Navigator>
-);
 
 export const Home = () => {
   const route = useRoute();
@@ -37,8 +25,8 @@ export const Home = () => {
       })}
     >
       <Tabs.Screen
-        name="PostsStack"
-        component={PostsStack}
+        name="Posts"
+        component={PostsScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             return <Feather name="grid" size={24} color={"#212121CC"} />;

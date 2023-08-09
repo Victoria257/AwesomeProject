@@ -2,10 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import styles from "./OpenCameraStyles.js";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function OpenCamera({ photo, setPhoto, navigation }) {
+export default function OpenCamera({
+  photo,
+  setPhoto,
+  setLatitude,
+  setLongitude,
+  setAddress,
+  navigation,
+}) {
   const [camera, setCamera] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -14,8 +22,14 @@ export default function OpenCamera({ photo, setPhoto, navigation }) {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
-
       setHasPermission(status === "granted");
+
+      // const { statusLocation } =
+      //   await Location.requestForegroundPermissionsAsync();
+      // if (statusLocation !== "granted") {
+      //   console.log("Permission to access location was denied");
+      //   return;
+      // }
     })();
   }, []);
 
@@ -55,7 +69,25 @@ export default function OpenCamera({ photo, setPhoto, navigation }) {
     if (camera) {
       const { uri } = await camera.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
+      const location = await Location.getCurrentPositionAsync();
+
+      const latitude = location.coords.latitude;
+      const longitude = location.coords.longitude;
+
+      const geocode = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      if (geocode && geocode.length > 0) {
+        setAddress(
+          geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
+        );
+      }
+
       setPhoto(uri);
+      setLatitude(latitude);
+      setLongitude(longitude);
     }
   };
 

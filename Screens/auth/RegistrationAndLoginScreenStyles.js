@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 92,
     fontSize: 30,
-    fontWeight: 500,
+    fontWeight: "500",
     lineHeight: 35,
     letterSpacing: 0.01,
 

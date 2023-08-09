@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     // fontFamily: Roboto,
     fontSize: 16,
     fontStyle: "normal",
-    fontWeight: 500,
+    fontWeight: "500",
   },
   signatureContainer: {
     marginTop: 8,
