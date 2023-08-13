@@ -13,7 +13,7 @@ import {
 
 const Tabs = createBottomTabNavigator();
 
-export const Home = () => {
+export const Home = ({ navigation }) => {
   const route = useRoute();
   const routeName = getFocusedRouteNameFromRoute(route);
 

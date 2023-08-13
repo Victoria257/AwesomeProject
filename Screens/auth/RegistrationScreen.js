@@ -16,6 +16,8 @@ import styles from "./RegistrationAndLoginScreenStyles";
 import { useState } from "react";
 import { SvgXml } from "react-native-svg";
 import addSvg from "../../images/add.svg.js";
+import { useDispatch } from "react-redux";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 
 export function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -24,14 +26,16 @@ export function RegistrationScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  const dispatch = useDispatch();
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
   const registerForm = () => {
-    navigation.navigate("Home");
-    console.log([login, email, password]);
+    dispatch(authSignUpUser({ email, password, login }));
+    console.log({ login, email, password });
     setEmail("");
     setLogin("");
     setPassword("");

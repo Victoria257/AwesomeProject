@@ -7,9 +7,12 @@ import { Feather } from "@expo/vector-icons";
 import { Post } from "../../../Components/Post/Post";
 
 import styles from "./DefaultScreenPostsStyles";
+import { useDispatch } from "react-redux";
+import { authSignOutUser } from "../../../redux/auth/authOperations";
 
 export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (route.params) {
@@ -28,7 +31,9 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
       headerRight: () => (
         <TouchableOpacity
           style={styles.logoutButton}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => {
+            dispatch(authSignOutUser());
+          }}
         >
           <Feather name="log-out" size={24} color="#BDBDBD" />
         </TouchableOpacity>

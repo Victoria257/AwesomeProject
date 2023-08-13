@@ -39,9 +39,7 @@ export const CommentsScreen = ({ navigation, route }) => {
 
   const onSendComment = () => {
     comment && setComments((prevState) => [...prevState, comment]);
-    console.log(comment);
     setComment("");
-    console.log(comments);
   };
 
   return (

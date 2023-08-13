@@ -13,8 +13,16 @@ export const PostsScreen = ({ navigation }) => {
         name="DefaultScreen"
         component={DefaultScreenPosts}
       />
-      <NestedScreen.Screen name="Comments" component={CommentsScreen} />
-      <NestedScreen.Screen name="Map" component={MapScreen} />
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{ tabBarVisible: false }}
+      />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ tabBarVisible: false }}
+      />
     </NestedScreen.Navigator>
   );
 };

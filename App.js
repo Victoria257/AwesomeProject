@@ -1,14 +1,15 @@
 import "react-native-gesture-handler";
-import React from "react";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
-
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Provider } from "react-redux";
 import { useFonts } from "expo-font";
-import { useRoutes } from "./router";
+import { store } from "./redux/store";
+import { StyleSheet } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { Main } from "./Components/Main";
 
 export default function App() {
-  const routing = useRoutes(null);
+  const [isReady, setIsReady] = useState(null);
+
   const [fontsLoaded, error] = useFonts({
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
   });
@@ -24,7 +25,11 @@ export default function App() {
 
   const fontFamily = fontsLoaded ? "Roboto-Medium" : "sans-serif";
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <Provider store={store}>
+      <Main />
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({

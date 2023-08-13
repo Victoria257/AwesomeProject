@@ -12,6 +12,8 @@ import {
 
 import styles from "./RegistrationAndLoginScreenStyles";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
 
 export function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -19,14 +21,15 @@ export function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  const dispatch = useDispatch();
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
   const enterForm = () => {
-    navigation.navigate("Home");
-    console.log([email, password]);
+    dispatch(authSignInUser({ email, password }));
     setEmail("");
     setPassword("");
   };
