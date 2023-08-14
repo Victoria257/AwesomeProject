@@ -16,6 +16,7 @@ export default function OpenCamera({
 }) {
   const [camera, setCamera] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
+  const [location, setLocation] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
@@ -24,12 +25,14 @@ export default function OpenCamera({
       await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === "granted");
 
-      // const { statusLocation } =
-      //   await Location.requestForegroundPermissionsAsync();
+      const { statusLocation } =
+        await Location.requestForegroundPermissionsAsync();
       // if (statusLocation !== "granted") {
       //   console.log("Permission to access location was denied");
       //   return;
       // }
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
     })();
   }, []);
 
