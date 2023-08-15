@@ -58,9 +58,10 @@ export const authSignOutUser = () => async (dispatch, getState) => {
   try {
     const user = auth.currentUser;
     if (user) {
-      await user.delete();
+      await signOut(auth);
+      // await user.delete();
       await dispatch(authSignOut());
-      console.log("User deleted from Firebase.");
+      console.log("User signOut from Firebase.");
     } else {
       console.log("No user is currently signed in.");
     }

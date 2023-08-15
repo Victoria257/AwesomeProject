@@ -11,15 +11,18 @@ import OpenCamera from "../../Components/OpenCamera/OpenCamera";
 import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from "../../config.js";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useSelector } from "react-redux";
 
 export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
   const [address, setAddress] = useState("");
+  const [geoCode, setGeoCode] = useState("");
+  const [location, setLocation] = useState(null);
+
   const [isActiveInput, setIsActiveInput] = useState(null);
+
+  const { userId, login } = useSelector((state) => state.auth);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,8 +50,8 @@ export const CreatePostScreen = ({ navigation }) => {
     setTitle(text);
   };
 
-  const onChangeLocation = (text) => {
-    setLocation(text);
+  const onChangeAddress = (text) => {
+    setAddress(text);
   };
 
   const createPost = async (newPostData) => {
@@ -72,29 +75,13 @@ export const CreatePostScreen = ({ navigation }) => {
       console.log("File uploaded successfully. URL:", fileUrl);
       createPost({
         photoURL: fileUrl,
-        title: "",
-        location: "",
+        title,
+        location: location.coords,
+        userId,
+        login,
+        address,
+        geoCode,
       });
-      // uploadTask.on(
-      //   "state_changed",
-      //   (snapshot) => {
-      //     const progress =
-      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //     console.log(`Upload progress: ${progress}%`);
-      //   },
-      //   (error) => {
-      //     console.log("Error uploading photo: ", error);
-      //   },
-      //   async () => {
-      //     // Upload completed successfully, get the download URL
-      //     const fileUrl = await getDownloadURL(storageRef); //отримує URL-адресу для завантаження завантаженого файлу з Firebase Storage. Цю URL-адресу можна використовувати для відображення або доступу до завантаженого файлу
-      //     console.log("File uploaded successfully. URL:", fileUrl);
-      //     // Call the createPost function and pass the necessary data
-      //     createPost({
-      //       photo: file,
-      //     });
-      //   }
-      // );
     } catch (error) {
       console.error("Error uploading photo: ", error);
     }
@@ -103,20 +90,13 @@ export const CreatePostScreen = ({ navigation }) => {
   const sendPhoto = () => {
     uploadPhotoToServer();
 
-    navigation.navigate("DefaultScreen", {
-      photo,
-      title,
-      location,
-      latitude,
-      longitude,
-      address,
-    });
+    navigation.navigate("DefaultScreen");
+
     setPhoto("");
     setTitle("");
     setLocation("");
-    setLatitude("");
-    setLongitude("");
     setAddress("");
+    setGeoCode("");
   };
 
   return (
@@ -126,9 +106,10 @@ export const CreatePostScreen = ({ navigation }) => {
           <OpenCamera
             photo={photo}
             setPhoto={setPhoto}
-            setLatitude={setLatitude}
-            setLongitude={setLongitude}
+            location={location}
+            setLocation={setLocation}
             setAddress={setAddress}
+            setGeoCode={setGeoCode}
             navigation={navigation}
           />
         </View>
@@ -153,11 +134,11 @@ export const CreatePostScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.input}
-              value={location}
+              value={address}
               placeholder="Місцевість..."
               placeholderTextColor={"#BDBDBD"}
               keyboardType="default"
-              onChangeText={onChangeLocation}
+              onChangeText={onChangeAddress}
             />
           </View>
           <TouchableOpacity style={styles.formButton} onPress={sendPhoto}>

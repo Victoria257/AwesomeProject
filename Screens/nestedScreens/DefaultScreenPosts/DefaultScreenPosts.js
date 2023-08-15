@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from "react";
-
+import { useDispatch } from "react-redux";
 import { View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
+import { db } from "../../../config";
+import { collection, getDocs } from "firebase/firestore";
+
+import { authSignOutUser } from "../../../redux/auth/authOperations";
 import { Post } from "../../../Components/Post/Post";
 
 import styles from "./DefaultScreenPostsStyles";
-import { useDispatch } from "react-redux";
-import { authSignOutUser } from "../../../redux/auth/authOperations";
 
 export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
+    getAllPost();
+  }, []);
+
+  const getAllPost = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "posts"));
+      const posts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data(),
+      }));
+      setPosts(posts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      throw error;
     }
-  }, [route.params]);
+  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

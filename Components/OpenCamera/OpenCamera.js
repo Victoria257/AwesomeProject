@@ -9,14 +9,14 @@ import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 export default function OpenCamera({
   photo,
   setPhoto,
-  setLatitude,
-  setLongitude,
+  location,
+  setLocation,
   setAddress,
+  setGeoCode,
   navigation,
 }) {
   const [camera, setCamera] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
-  const [location, setLocation] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
@@ -27,12 +27,10 @@ export default function OpenCamera({
 
       const { statusLocation } =
         await Location.requestForegroundPermissionsAsync();
-      // if (statusLocation !== "granted") {
-      //   console.log("Permission to access location was denied");
-      //   return;
-      // }
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      if (statusLocation !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
     })();
   }, []);
 
@@ -72,8 +70,9 @@ export default function OpenCamera({
     if (camera) {
       const { uri } = await camera.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
-      const location = await Location.getCurrentPositionAsync();
-
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log("location.coords", JSON.stringify(location.coords));
       const latitude = location.coords.latitude;
       const longitude = location.coords.longitude;
 
@@ -83,14 +82,12 @@ export default function OpenCamera({
       });
 
       if (geocode && geocode.length > 0) {
-        setAddress(
+        setGeoCode(
           geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
         );
       }
 
       setPhoto(uri);
-      setLatitude(latitude);
-      setLongitude(longitude);
     }
   };
 

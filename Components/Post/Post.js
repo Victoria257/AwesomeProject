@@ -10,18 +10,19 @@ export const Post = ({ posts, navigation }) => {
       data={posts}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => {
+        const { id, data } = item;
         return (
           <View style={styles.set}>
             <View>
-              <Image source={{ uri: item.photo }} style={styles.photo} />
+              <Image source={{ uri: data.photoURL }} style={styles.photo} />
             </View>
             <View>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{data.title}</Text>
               <View style={styles.signatureContainer}>
                 <TouchableOpacity
                   style={styles.commentsContainer}
                   onPress={() => {
-                    navigation.navigate("Comments", { uri: item.photo });
+                    navigation.navigate("Comments", { uri: data.photoURL });
                   }}
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
@@ -31,13 +32,13 @@ export const Post = ({ posts, navigation }) => {
                   style={styles.locationContainer}
                   onPress={() => {
                     navigation.navigate("Map", {
-                      latitude: item.latitude,
-                      longitude: item.longitude,
+                      latitude: data.location.latitude,
+                      longitude: data.location.longitude,
                     });
                   }}
                 >
                   <Feather name="map-pin" size={24} color="#BDBDBD" />
-                  <Text>{item.location ? item.location : item.address}</Text>
+                  <Text>{data.address ? data.address : data.geoCode}</Text>
                 </TouchableOpacity>
               </View>
             </View>
