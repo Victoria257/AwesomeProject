@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, TextInput, FlatList } from "react-native";
+import { Image, View, TextInput, FlatList, Keyboard, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather, AntDesign } from "@expo/vector-icons";
-
-import { Text } from "react-native";
-import { ScrollView } from "react-native";
 import { useSelector } from "react-redux";
 
 import { collection, getDocs, doc, addDoc } from "firebase/firestore";
@@ -49,6 +46,7 @@ export const CommentsScreen = ({ navigation, route }) => {
 
   const onSendComment = () => {
     console.log("sendComment");
+    Keyboard.dismiss();
     if (comment) {
       createPost({ comment, login });
       setComment("");

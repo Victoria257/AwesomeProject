@@ -20,8 +20,6 @@ export const CreatePostScreen = ({ navigation }) => {
   const [geoCode, setGeoCode] = useState("");
   const [location, setLocation] = useState(null);
 
-  const [isActiveInput, setIsActiveInput] = useState(null);
-
   const { userId, login } = useSelector((state) => state.auth);
 
   React.useLayoutEffect(() => {
@@ -99,6 +97,12 @@ export const CreatePostScreen = ({ navigation }) => {
     setGeoCode("");
   };
 
+  const delData = () => {
+    setPhoto("");
+    setTitle("");
+    setAddress("");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -147,9 +151,9 @@ export const CreatePostScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.footer}>
-        <View style={styles.delete}>
+        <TouchableOpacity style={styles.delete} onPress={delData}>
           <Feather name="trash-2" size={24} color="#BDBDBD" />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

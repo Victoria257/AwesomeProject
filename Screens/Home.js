@@ -60,6 +60,7 @@ export const Home = ({ navigation }) => {
         name="Profile"
         component={ProfileScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <View style={focused ? styles.focusIcon : styles.tabBarIcon}>

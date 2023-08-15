@@ -11,6 +11,8 @@ export const Post = ({ posts, navigation }) => {
       keyExtractor={(item, index) => item.id}
       renderItem={({ item }) => {
         const { id, data } = item;
+
+        // const commentsLength = comments.length;
         return (
           <View style={styles.set}>
             <View>
@@ -41,7 +43,9 @@ export const Post = ({ posts, navigation }) => {
                   }}
                 >
                   <Feather name="map-pin" size={24} color="#BDBDBD" />
-                  <Text>{data.address ? data.address : data.geoCode}</Text>
+                  <Text style={styles.location}>
+                    {data.address ? data.address : data.geoCode}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

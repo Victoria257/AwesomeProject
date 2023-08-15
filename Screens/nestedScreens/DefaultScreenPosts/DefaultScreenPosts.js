@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -15,6 +15,7 @@ import styles from "./DefaultScreenPostsStyles";
 export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
+  const { email, login } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
@@ -62,8 +63,8 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
           <Feather name="user" size={24} color="black" />
         </View>
         <View style={styles.userData}>
-          <Text style={styles.userName}>Вікторія</Text>
-          <Text style={styles.userEmail}>Email@gmail.com</Text>
+          <Text style={styles.userName}>{login}</Text>
+          <Text style={styles.userEmail}>{email}</Text>
         </View>
       </View>
       <Post posts={posts} navigation={navigation} />

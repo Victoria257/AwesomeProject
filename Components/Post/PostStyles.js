@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 4,
   },
+  location: {
+    textDecorationLine: "underline",
+  },
 });
 
 export default styles;
