@@ -91,7 +91,7 @@ export const CommentsScreen = ({ navigation, route }) => {
 
         <FlatList
           style={styles.listComments}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => item.id}
           data={comments}
           renderItem={({ item }) => (
             <View style={styles.wrapper}>

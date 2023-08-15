@@ -8,7 +8,7 @@ export const Post = ({ posts, navigation }) => {
   return (
     <FlatList
       data={posts}
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={(item, index) => item.id}
       renderItem={({ item }) => {
         const { id, data } = item;
         return (
