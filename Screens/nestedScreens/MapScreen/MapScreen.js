@@ -7,12 +7,11 @@ export const MapScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text>Location:{location}</Text> */}
       <MapView
         style={styles.mapStyle}
         initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
+          latitude,
+          longitude,
           latitudeDelta: 0.001,
           longitudeDelta: 0.006,
         }}

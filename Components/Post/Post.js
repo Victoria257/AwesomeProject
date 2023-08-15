@@ -22,7 +22,10 @@ export const Post = ({ posts, navigation }) => {
                 <TouchableOpacity
                   style={styles.commentsContainer}
                   onPress={() => {
-                    navigation.navigate("Comments", { uri: data.photoURL });
+                    navigation.navigate("Comments", {
+                      uri: data.photoURL,
+                      postId: id,
+                    });
                   }}
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
