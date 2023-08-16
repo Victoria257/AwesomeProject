@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
   },
   formButton: {
     marginTop: 32,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: "#FF6C00",
+
     borderRadius: 100,
     paddingBottom: 16,
     paddingTop: 16,
@@ -72,8 +73,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textButton: {
-    color: "#BDBDBD",
+    color: "#FFFFFF",
+
     fontSize: 16,
+  },
+  disabledButton: {
+    backgroundColor: "#F6F6F6",
+  },
+  disabledText: {
+    color: "#BDBDBD",
   },
   footer: {
     height: 71,

@@ -1,9 +1,18 @@
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  ToastAndroid,
+  Button,
+  StatusBar,
+} from "react-native";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
   signOut,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 
 import { auth } from "../../config";
@@ -11,10 +20,25 @@ import { authSlice } from "./authSlice";
 import { authSignOut } from "./authSlice";
 import { useSelector } from "react-redux";
 
+const showToast = (message) => {
+  ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.CENTER);
+};
+
 export const authSignUpUser =
   ({ email, password, login }) =>
   async (dispatch, getState) => {
+    if (!email || !password || !login) {
+      showToast("Всі поля є обов'язкові!");
+      return;
+    }
     try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        console.log("Користувач з такою адресою електронної пошти вже існує");
+        showToast("Така електронна адреса в базі вже існує");
+        return;
+      }
+
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -40,19 +64,25 @@ export const authSignUpUser =
         })
       );
     } catch (error) {
-      throw error;
+      console.log("error", error);
+      showToast("Помилка. Спробуйте ще.");
     }
   };
 
 export const authSignInUser =
   ({ email, password }) =>
   async (dispatch, getState) => {
+    if (!email || !password) {
+      showToast("Всі поля є обов'язкові!");
+      return;
+    }
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
 
       return user.user;
     } catch (error) {
-      throw error;
+      showToast("Невірний логін або пароль!");
+      return;
     }
   };
 export const authSignOutUser = () => async (dispatch, getState) => {
@@ -63,13 +93,14 @@ export const authSignOutUser = () => async (dispatch, getState) => {
       // await user.delete(); для видалення повністю з БД
       await dispatch(authSignOut());
       console.log("User signOut from Firebase.");
+      showToast("Успішний вихід!");
     } else {
+      showToast("Ви не ввійшли в додаток!");
       console.log("No user is currently signed in.");
     }
-
   } catch (error) {
-    console.log(error);
-    throw error;
+    showToast("Помилка! Щось пішло не так!");
+    console.log("error", error);
   }
 };
 
@@ -88,6 +119,6 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
       }
     });
   } catch (error) {
-    console.log(error);
+    console.log("error", error);
   }
 };

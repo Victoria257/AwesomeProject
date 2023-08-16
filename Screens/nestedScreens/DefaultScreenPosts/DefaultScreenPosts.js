@@ -11,9 +11,11 @@ import { authSignOutUser } from "../../../redux/auth/authOperations";
 import { Post } from "../../../Components/Post/Post";
 
 import styles from "./DefaultScreenPostsStyles";
+import { ActivityIndicator } from "react-native";
 
 export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const { email, login } = useSelector((state) => state.auth);
 
@@ -21,7 +23,14 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
     getAllPost();
   }, []);
 
+  useEffect(() => {
+    setIsLoading(true);
+    console.log("route.paramsUse", route.params);
+    getAllPost();
+  }, [route.params]);
+
   const getAllPost = async () => {
+    console.log("getAll");
     try {
       const snapshot = await getDocs(collection(db, "posts"));
       const posts = [];
@@ -44,9 +53,10 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
       }
 
       setPosts(posts);
+      setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching posts:", error);
-      throw error;
+      setIsLoading(false);
+      console.log("Error fetching posts:", error);
     }
   };
 
@@ -79,7 +89,11 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
           <Text style={styles.userEmail}>{email}</Text>
         </View>
       </View>
-      <Post posts={posts} navigation={navigation} />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <Post posts={posts} navigation={navigation} />
+      )}
     </View>
   );
 };

@@ -27,10 +27,12 @@ import { db } from "../../config";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 import styles from "./ProfileScreenStyles";
 import addSvg from "../../images/add.svg.js";
+import { ActivityIndicator } from "react-native";
 
 export function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   dispatch = useDispatch();
   const { userId, login } = useSelector((state) => state.auth);
 
@@ -66,10 +68,11 @@ export function ProfileScreen({ navigation }) {
         }
 
         setUserPosts(userPosts);
-
+        setIsLoading(false);
         console.log("Subscribed to user posts");
       });
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching user posts:", error);
     }
   };
@@ -99,76 +102,84 @@ export function ProfileScreen({ navigation }) {
         </View>
         <View style={styles.viewContent}>
           <Text style={styles.userName}>{login}</Text>
-          <FlatList
-            style={styles.list}
-            data={userPosts}
-            keyExtractor={(item, index) => item.id}
-            renderItem={({ item }) => {
-              const { id, data, comments } = item;
-              const commentsLength = comments.length;
-              return (
-                <View style={styles.set}>
-                  <View>
-                    <Image
-                      source={{ uri: data.photoURL }}
-                      style={styles.photo}
-                    />
-                  </View>
-                  <View>
-                    <Text style={styles.title}>{data.title}</Text>
-                    <View style={styles.signatureContainer}>
-                      <View style={styles.signatureLeftContainer}>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <FlatList
+              style={styles.list}
+              data={userPosts}
+              keyExtractor={(item, index) => item.id}
+              renderItem={({ item }) => {
+                const { id, data, comments } = item;
+                const commentsLength = comments.length;
+                return (
+                  <View style={styles.set}>
+                    <View>
+                      <Image
+                        source={{ uri: data.photoURL }}
+                        style={styles.photo}
+                      />
+                    </View>
+                    <View>
+                      <Text style={styles.title}>{data.title}</Text>
+                      <View style={styles.signatureContainer}>
+                        <View style={styles.signatureLeftContainer}>
+                          <TouchableOpacity
+                            style={styles.commentsContainer}
+                            onPress={() => {
+                              navigation.navigate("Comments", {
+                                uri: data.photoURL,
+                                postId: id,
+                              });
+                            }}
+                          >
+                            <Feather
+                              name="message-circle"
+                              size={24}
+                              color="#BDBDBD"
+                            />
+                            <Text style={{ color: "#BDBDBD" }}>
+                              {commentsLength}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.likesContainer}
+                            onPress={() => {
+                              navigation.navigate("Comments", {
+                                uri: data.photoURL,
+                                postId: id,
+                              });
+                            }}
+                          >
+                            <Feather
+                              name="thumbs-up"
+                              size={24}
+                              color="#BDBDBD"
+                            />
+                            <Text style={{ color: "#BDBDBD" }}>0</Text>
+                          </TouchableOpacity>
+                        </View>
                         <TouchableOpacity
-                          style={styles.commentsContainer}
+                          style={styles.locationContainer}
                           onPress={() => {
-                            navigation.navigate("Comments", {
-                              uri: data.photoURL,
-                              postId: id,
+                            navigation.navigate("Map", {
+                              latitude: data.location.latitude,
+                              longitude: data.location.longitude,
                             });
                           }}
                         >
-                          <Feather
-                            name="message-circle"
-                            size={24}
-                            color="#BDBDBD"
-                          />
-                          <Text style={{ color: "#BDBDBD" }}>
-                            {commentsLength}
+                          <Feather name="map-pin" size={24} color="#BDBDBD" />
+                          <Text>
+                            {data.address ? data.address : data.geoCode}
                           </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles.likesContainer}
-                          onPress={() => {
-                            navigation.navigate("Comments", {
-                              uri: data.photoURL,
-                              postId: id,
-                            });
-                          }}
-                        >
-                          <Feather name="thumbs-up" size={24} color="#BDBDBD" />
-                          <Text style={{ color: "#BDBDBD" }}>0</Text>
-                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity
-                        style={styles.locationContainer}
-                        onPress={() => {
-                          navigation.navigate("Map", {
-                            latitude: data.location.latitude,
-                            longitude: data.location.longitude,
-                          });
-                        }}
-                      >
-                        <Feather name="map-pin" size={24} color="#BDBDBD" />
-                        <Text>
-                          {data.address ? data.address : data.geoCode}
-                        </Text>
-                      </TouchableOpacity>
                     </View>
                   </View>
-                </View>
-              );
-            }}
-          ></FlatList>
+                );
+              }}
+            ></FlatList>
+          )}
         </View>
       </ImageBackground>
     </View>

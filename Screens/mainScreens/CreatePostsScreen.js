@@ -19,6 +19,7 @@ export const CreatePostScreen = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [geoCode, setGeoCode] = useState("");
   const [location, setLocation] = useState(null);
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   const { userId, login } = useSelector((state) => state.auth);
 
@@ -85,10 +86,11 @@ export const CreatePostScreen = ({ navigation }) => {
     }
   };
 
-  const sendPhoto = () => {
-    uploadPhotoToServer();
-
-    navigation.navigate("DefaultScreen");
+  const sendPhoto = async () => {
+    setIsButtonPressed(true);
+    await uploadPhotoToServer();
+    const id = Date.now().toString();
+    navigation.navigate("DefaultScreen", { postCreated: id });
 
     setPhoto("");
     setTitle("");
@@ -145,8 +147,17 @@ export const CreatePostScreen = ({ navigation }) => {
               onChangeText={onChangeAddress}
             />
           </View>
-          <TouchableOpacity style={styles.formButton} onPress={sendPhoto}>
-            <Text style={styles.textButton}>Опубліковати</Text>
+          <TouchableOpacity
+            style={[
+              styles.formButton,
+              (!photo || isButtonPressed) && styles.disabledButton,
+            ]}
+            onPress={sendPhoto}
+            disabled={!photo || isButtonPressed}
+          >
+            <Text style={[styles.textButton, !photo && styles.disabledText]}>
+              Опубліковати
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
