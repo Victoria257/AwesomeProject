@@ -10,9 +10,8 @@ export const Post = ({ posts, navigation }) => {
       data={posts}
       keyExtractor={(item, index) => item.id}
       renderItem={({ item }) => {
-        const { id, data } = item;
-
-        // const commentsLength = comments.length;
+        const { id, data, comments } = item;
+        const commentsLength = comments.length;
         return (
           <View style={styles.set}>
             <View>
@@ -31,7 +30,7 @@ export const Post = ({ posts, navigation }) => {
                   }}
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
-                  <Text style={{ color: "#BDBDBD" }}>0</Text>
+                  <Text style={{ color: "#BDBDBD" }}>{commentsLength}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.locationContainer}

@@ -24,10 +24,25 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
   const getAllPost = async () => {
     try {
       const snapshot = await getDocs(collection(db, "posts"));
-      const posts = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: doc.data(),
-      }));
+      const posts = [];
+
+      for (const doc of snapshot.docs) {
+        const postData = doc.data();
+        const postId = doc.id;
+        const commentsCollectionRef = collection(
+          db,
+          "posts",
+          postId,
+          "comments"
+        );
+        const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
+        const comments = commentsQuerySnapshot.docs.map((commentDoc) =>
+          commentDoc.data()
+        );
+
+        posts.push({ id: postId, data: postData, comments: comments });
+      }
+
       setPosts(posts);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -38,11 +53,8 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Публікації",
-      // headerStyle: styles.headerStyle,
       headerTitleAlign: "center",
       headerTitleStyle: styles.headerTitleStyle,
-      //  headerStyle:{styles.headerStyle},
-      // headerStyle:
       headerRight: () => (
         <TouchableOpacity
           style={styles.logoutButton}

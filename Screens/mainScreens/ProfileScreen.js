@@ -12,7 +12,13 @@ import {
   ScrollView,
   Keyboard,
 } from "react-native";
-import { collection, where, query, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  where,
+  query,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 
 import { Feather } from "@expo/vector-icons";
 import { SvgXml } from "react-native-svg";
@@ -37,10 +43,29 @@ export function ProfileScreen({ navigation }) {
     const q = query(postsRef, where("userId", "==", userId));
 
     try {
-      const unsubscribe = onSnapshot(q, (data) => {
-        setUserPosts(
-          data.docs.map((doc) => ({ id: doc.id, data: doc.data() }))
-        );
+      const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+        const userPosts = [];
+
+        for (const doc of querySnapshot.docs) {
+          const postData = doc.data();
+          const postId = doc.id;
+
+          // Отримуємо коментарі для кожного поста
+          const commentsCollectionRef = collection(
+            db,
+            "posts",
+            postId,
+            "comments"
+          );
+          const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
+          const comments = commentsQuerySnapshot.docs.map((commentDoc) =>
+            commentDoc.data()
+          );
+
+          userPosts.push({ id: postId, data: postData, comments: comments });
+        }
+
+        setUserPosts(userPosts);
 
         console.log("Subscribed to user posts");
       });
@@ -79,7 +104,8 @@ export function ProfileScreen({ navigation }) {
             data={userPosts}
             keyExtractor={(item, index) => item.id}
             renderItem={({ item }) => {
-              const { id, data } = item;
+              const { id, data, comments } = item;
+              const commentsLength = comments.length;
               return (
                 <View style={styles.set}>
                   <View>
@@ -106,7 +132,9 @@ export function ProfileScreen({ navigation }) {
                             size={24}
                             color="#BDBDBD"
                           />
-                          <Text style={{ color: "#BDBDBD" }}>0</Text>
+                          <Text style={{ color: "#BDBDBD" }}>
+                            {commentsLength}
+                          </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.likesContainer}

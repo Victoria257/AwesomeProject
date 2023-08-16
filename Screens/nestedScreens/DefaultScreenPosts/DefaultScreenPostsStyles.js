@@ -6,9 +6,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-  // headerStyle: {
-  //   backgroundColor: "orange",
-  // },
+
   headerTitleStyle: {
     color: "#212121",
     fontSize: 17,

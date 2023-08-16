@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     height: "100%",
     width: "100%",
-    // justifyContent: "flex-end",
+
   },
   imageContainer: {
     position: "absolute",

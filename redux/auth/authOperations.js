@@ -60,13 +60,13 @@ export const authSignOutUser = () => async (dispatch, getState) => {
     const user = auth.currentUser;
     if (user) {
       await signOut(auth);
-      // await user.delete();
+      // await user.delete(); для видалення повністю з БД
       await dispatch(authSignOut());
       console.log("User signOut from Firebase.");
     } else {
       console.log("No user is currently signed in.");
     }
-    // await signOut(auth);
+
   } catch (error) {
     console.log(error);
     throw error;
