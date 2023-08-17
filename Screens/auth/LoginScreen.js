@@ -20,6 +20,7 @@ export function LoginScreen({ navigation }) {
   const [isActiveInput, setIsActiveInput] = useState(null);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [isButtonShowPress, setIsButtonShowPress] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -90,7 +91,7 @@ export function LoginScreen({ navigation }) {
                     placeholder="Пароль"
                     placeholderTextColor="#BDBDBD"
                     keyboardType="default"
-                    secureTextEntry={true}
+                    secureTextEntry={!isButtonShowPress}
                     maxLength={20}
                     onChangeText={setPassword}
                     onFocus={() => {
@@ -99,8 +100,13 @@ export function LoginScreen({ navigation }) {
                     }}
                     onBlur={keyboardHide}
                   />
-                  <TouchableOpacity style={styles.buttonShow}>
-                    <Text style={styles.buttonShowText}>Показати</Text>
+                  <TouchableOpacity
+                    style={styles.buttonShow}
+                    onPress={() => setIsButtonShowPress(!isButtonShowPress)}
+                  >
+                    <Text style={styles.buttonShowText}>
+                      {isButtonShowPress ? "Приховати" : "Показати"}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

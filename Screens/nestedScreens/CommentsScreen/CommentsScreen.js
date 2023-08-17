@@ -3,6 +3,7 @@ import { Image, View, TextInput, FlatList, Keyboard, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { format } from "date-fns";
 
 import { collection, getDocs, doc, addDoc } from "firebase/firestore";
 import { db } from "../../../config";
@@ -57,7 +58,13 @@ export const CommentsScreen = ({ navigation, route }) => {
     try {
       const postRef = doc(db, "posts", postId);
       const commentsCollectionRef = collection(postRef, "comments");
-      const newCommentDocRef = await addDoc(commentsCollectionRef, newComment);
+
+      const commentWithTimestamp = { ...newComment, timestamp: new Date() };
+      const newCommentDocRef = await addDoc(
+        commentsCollectionRef,
+        commentWithTimestamp
+      );
+
       getAllComments();
     } catch (error) {
       console.error("Error adding comment: ", error);
@@ -70,10 +77,23 @@ export const CommentsScreen = ({ navigation, route }) => {
       const commentsCollectionRef = collection(postRef, "comments");
       const snapshot = await getDocs(commentsCollectionRef);
 
-      const comments = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: doc.data(),
-      }));
+      // const comments = snapshot.docs.map((doc) => ({
+      //   id: doc.id,
+      //   data: doc.data(),
+      // }));
+
+      const comments = snapshot.docs.map((doc) => {
+        const commentData = doc.data();
+        const formattedDate = format(
+          commentData.timestamp.toDate(),
+          "dd MMMM, yyyy | HH:mm"
+        );
+        return {
+          id: doc.id,
+          data: commentData,
+          formattedDate: formattedDate,
+        };
+      });
 
       setComments(comments);
     } catch (error) {
@@ -93,12 +113,16 @@ export const CommentsScreen = ({ navigation, route }) => {
           data={comments}
           renderItem={({ item }) => (
             <View style={styles.wrapper}>
-              <View style={styles.user}></View>
+              <View style={styles.user}>
+                <Text style={styles.userName}>
+                  {item.data.login.substring(0, 1).toUpperCase()}
+                </Text>
+              </View>
               <View style={styles.commentContainer}>
                 <Text style={styles.comment}>{item.data.comment}</Text>
-                <Text style={styles.comment}>{item.data.login}</Text>
+
                 <View style={styles.dateContainer}>
-                  <Text style={styles.date}>дата</Text>
+                  <Text style={styles.date}>{item.formattedDate}</Text>
                 </View>
               </View>
             </View>

@@ -12,7 +12,6 @@ export default function OpenCamera({
   location,
   setLocation,
   setAddress,
-  setGeoCode,
   navigation,
 }) {
   const [camera, setCamera] = useState(null);
@@ -70,24 +69,12 @@ export default function OpenCamera({
     if (camera) {
       const { uri } = await camera.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
+
+      setPhoto(uri);
+
       const location = await Location.getCurrentPositionAsync({});
       setLocation(location);
       console.log("location.coords", JSON.stringify(location.coords));
-      const latitude = location.coords.latitude;
-      const longitude = location.coords.longitude;
-
-      const geocode = await Location.reverseGeocodeAsync({
-        latitude,
-        longitude,
-      });
-
-      if (geocode && geocode.length > 0) {
-        setGeoCode(
-          geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
-        );
-      }
-
-      setPhoto(uri);
     }
   };
 

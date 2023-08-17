@@ -4,6 +4,7 @@ import { View, Text, Keyboard } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
+import * as Location from "expo-location";
 
 import styles from "./CreatePostsScreenStyles";
 import OpenCamera from "../../Components/OpenCamera/OpenCamera";
@@ -88,6 +89,19 @@ export const CreatePostScreen = ({ navigation }) => {
 
   const sendPhoto = async () => {
     setIsButtonPressed(true);
+    const latitude = location.coords.latitude;
+    const longitude = location.coords.longitude;
+
+    const geocode = await Location.reverseGeocodeAsync({
+      latitude,
+      longitude,
+    });
+
+    if (geocode && geocode.length > 0) {
+      setGeoCode(
+        geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
+      );
+    }
     await uploadPhotoToServer();
     const id = Date.now().toString();
     navigation.navigate("DefaultScreen", { postCreated: id });
@@ -97,6 +111,8 @@ export const CreatePostScreen = ({ navigation }) => {
     setLocation("");
     setAddress("");
     setGeoCode("");
+
+    setIsButtonPressed(false);
   };
 
   const delData = () => {
@@ -115,7 +131,6 @@ export const CreatePostScreen = ({ navigation }) => {
             location={location}
             setLocation={setLocation}
             setAddress={setAddress}
-            setGeoCode={setGeoCode}
             navigation={navigation}
           />
         </View>
@@ -155,7 +170,12 @@ export const CreatePostScreen = ({ navigation }) => {
             onPress={sendPhoto}
             disabled={!photo || isButtonPressed}
           >
-            <Text style={[styles.textButton, !photo && styles.disabledText]}>
+            <Text
+              style={[
+                styles.textButton,
+                (!photo || isButtonPressed) && styles.disabledText,
+              ]}
+            >
               Опубліковати
             </Text>
           </TouchableOpacity>

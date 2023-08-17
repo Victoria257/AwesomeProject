@@ -25,6 +25,7 @@ export function RegistrationScreen({ navigation }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [isButtonShowPress, setIsButtonShowPress] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -118,7 +119,7 @@ export function RegistrationScreen({ navigation }) {
                     placeholder="Пароль"
                     placeholderTextColor="#BDBDBD"
                     keyboardType="default"
-                    secureTextEntry={true}
+                    secureTextEntry={!isButtonShowPress}
                     maxLength={20}
                     onChangeText={setPassword}
                     onFocus={() => {
@@ -127,8 +128,13 @@ export function RegistrationScreen({ navigation }) {
                     }}
                     onBlur={keyboardHide}
                   />
-                  <TouchableOpacity style={styles.buttonShow}>
-                    <Text style={styles.buttonShowText}>Показати</Text>
+                  <TouchableOpacity
+                    style={styles.buttonShow}
+                    onPress={() => setIsButtonShowPress(!isButtonShowPress)}
+                  >
+                    <Text style={styles.buttonShowText}>
+                      {isButtonShowPress ? "Приховати" : "Показати"}
+                    </Text>
                   </TouchableOpacity>
                   <View style={styles.buttonRegisterBox}>
                     <TouchableOpacity

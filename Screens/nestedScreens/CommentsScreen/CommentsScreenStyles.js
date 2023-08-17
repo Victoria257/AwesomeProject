@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: 16,
     backgroundColor: "gray",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userName: {
+    color: "#212121",
+    fontSize: 20,
+    fontWeight: "600",
   },
   commentContainer: {
     flex: 1,
