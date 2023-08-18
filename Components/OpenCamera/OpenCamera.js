@@ -6,6 +6,8 @@ import * as Location from "expo-location";
 import styles from "./OpenCameraStyles.js";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
+const API_KEY_MAPS = "AIzaSyB2EZJ-QcKl55jdlq6Sp8FLXbcbUIz6RNg";
+
 export default function OpenCamera({
   photo,
   setPhoto,
@@ -66,15 +68,13 @@ export default function OpenCamera({
   }
 
   const takePhoto = async () => {
+    console.log("takePhoto");
+    console.log("location", location);
     if (camera) {
       const { uri } = await camera.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
 
       setPhoto(uri);
-
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log("location.coords", JSON.stringify(location.coords));
     }
   };
 

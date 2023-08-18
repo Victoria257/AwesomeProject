@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   input: {
+    flex: 1,
     fontSize: 16,
   },
   iconInput: {

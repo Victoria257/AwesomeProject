@@ -13,6 +13,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from "../../config.js";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useSelector } from "react-redux";
+import { ActivityIndicator } from "react-native";
 
 export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
@@ -21,8 +22,36 @@ export const CreatePostScreen = ({ navigation }) => {
   const [geoCode, setGeoCode] = useState("");
   const [location, setLocation] = useState(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userId, login } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log("locationUse", location);
+    (async () => {
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log("location.coords", JSON.stringify(location.coords));
+
+      const latitude = location.coords.latitude;
+      const longitude = location.coords.longitude;
+
+      const geocode = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      if (geocode && geocode.length > 0) {
+        setGeoCode(
+          geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
+        );
+      }
+    })();
+    return () => {
+      setGeoCode("");
+      setLocation("");
+    };
+  }, []);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -73,6 +102,9 @@ export const CreatePostScreen = ({ navigation }) => {
 
       const fileUrl = await getDownloadURL(storageRef); //отримує URL-адресу для завантаження завантаженого файлу з Firebase Storage. Цю URL-адресу можна використовувати для відображення або доступу до завантаженого файлу
       console.log("File uploaded successfully. URL:", fileUrl);
+      const id = Date.now().toString();
+      navigation.navigate("DefaultScreen", { postCreated: id });
+      setIsLoading(false);
       createPost({
         photoURL: fileUrl,
         title,
@@ -88,31 +120,26 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const sendPhoto = async () => {
-    setIsButtonPressed(true);
-    const latitude = location.coords.latitude;
-    const longitude = location.coords.longitude;
+    console.log("sendPhoto");
+    console.log("location", location);
+    try {
+      setIsLoading(true);
+      setIsButtonPressed(true);
 
-    const geocode = await Location.reverseGeocodeAsync({
-      latitude,
-      longitude,
-    });
+      if (location) {
+        setIsLoading(true);
+        await uploadPhotoToServer();
+      }
+      setPhoto("");
+      setTitle("");
+      setAddress("");
 
-    if (geocode && geocode.length > 0) {
-      setGeoCode(
-        geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
-      );
+      setIsButtonPressed(false);
+    } catch (error) {
+      console.error("Помилка при відправці фото на сервер:", error);
+      setIsButtonPressed(false);
+      setIsLoading(false);
     }
-    await uploadPhotoToServer();
-    const id = Date.now().toString();
-    navigation.navigate("DefaultScreen", { postCreated: id });
-
-    setPhoto("");
-    setTitle("");
-    setLocation("");
-    setAddress("");
-    setGeoCode("");
-
-    setIsButtonPressed(false);
   };
 
   const delData = () => {
@@ -176,7 +203,7 @@ export const CreatePostScreen = ({ navigation }) => {
                 (!photo || isButtonPressed) && styles.disabledText,
               ]}
             >
-              Опубліковати
+              {isLoading ? "Завантажую..." : "Опубліковати"}
             </Text>
           </TouchableOpacity>
         </View>
