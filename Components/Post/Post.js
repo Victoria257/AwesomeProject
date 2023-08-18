@@ -5,9 +5,10 @@ import { Feather } from "@expo/vector-icons";
 import styles from "./PostStyles.js";
 
 export const Post = ({ posts, navigation }) => {
+  const sortedPosts = posts.sort((a, b) => b.data.timestamp - a.data.timestamp);
   return (
     <FlatList
-      data={posts}
+      data={sortedPosts}
       keyExtractor={(item, index) => item.id}
       renderItem={({ item }) => {
         const { id, data, comments } = item;

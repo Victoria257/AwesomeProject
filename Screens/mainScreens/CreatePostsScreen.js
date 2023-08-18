@@ -5,6 +5,7 @@ import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
 import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { format } from "date-fns";
 
 import styles from "./CreatePostsScreenStyles";
 import OpenCamera from "../../Components/OpenCamera/OpenCamera";
@@ -113,6 +114,7 @@ export const CreatePostScreen = ({ navigation }) => {
         login,
         address,
         geoCode,
+        timestamp: new Date(),
       });
     } catch (error) {
       console.error("Error uploading photo: ", error);
