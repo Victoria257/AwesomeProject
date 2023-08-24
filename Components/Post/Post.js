@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import styles from "./PostStyles.js";
+import MessageCircleIcon from "../MessageCircleIcon.js";
 
 export const Post = ({ posts, navigation }) => {
   const sortedPosts = posts.sort((a, b) => b.data.timestamp - a.data.timestamp);
@@ -30,8 +31,18 @@ export const Post = ({ posts, navigation }) => {
                     });
                   }}
                 >
-                  <Feather name="message-circle" size={24} color="#BDBDBD" />
-                  <Text style={{ color: "#BDBDBD" }}>{commentsLength}</Text>
+                  {commentsLength > 0 ? (
+                    <MessageCircleIcon size={24} color="#FF6C00" />
+                  ) : (
+                    <Feather name="message-circle" size={24} color="#BDBDBD" />
+                  )}
+                  <Text
+                    style={{
+                      color: commentsLength > 0 ? "#212121" : "#BDBDBD",
+                    }}
+                  >
+                    {commentsLength}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.locationContainer}
