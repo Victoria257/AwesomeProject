@@ -8,10 +8,12 @@ import { format } from "date-fns";
 import { collection, getDocs, doc, addDoc } from "firebase/firestore";
 import { db } from "../../../config";
 import styles from "./CommentsScreenStyles";
+import { ActivityIndicator } from "react-native";
 
 export const CommentsScreen = ({ navigation, route }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { uri, postId } = route.params;
   const { login } = useSelector((state) => state.auth);
 
@@ -46,12 +48,17 @@ export const CommentsScreen = ({ navigation, route }) => {
   };
 
   const onSendComment = () => {
+    setIsLoading(true);
     console.log("sendComment");
+
     Keyboard.dismiss();
     if (comment) {
       createPost({ comment, login });
       setComment("");
-    } else console.log("sendComment - wrong");
+    } else {
+      console.log("sendComment - wrong");
+      return;
+    }
   };
 
   const createPost = async (newComment) => {
@@ -66,6 +73,7 @@ export const CommentsScreen = ({ navigation, route }) => {
       );
 
       getAllComments();
+      setIsLoading(false);
     } catch (error) {
       console.error("Error adding comment: ", error);
     }
@@ -82,18 +90,22 @@ export const CommentsScreen = ({ navigation, route }) => {
       //   data: doc.data(),
       // }));
 
-      const comments = snapshot.docs.map((doc) => {
-        const commentData = doc.data();
-        const formattedDate = format(
-          commentData.timestamp.toDate(),
-          "dd MMMM, yyyy | HH:mm"
-        );
-        return {
-          id: doc.id,
-          data: commentData,
-          formattedDate: formattedDate,
-        };
-      });
+      const comments = snapshot.docs
+        .map((doc) => {
+          const commentData = doc.data();
+          const timestamp = commentData.timestamp.toDate();
+          const formattedDate = format(
+            commentData.timestamp.toDate(),
+            "dd MMMM, yyyy | HH:mm"
+          );
+          return {
+            id: doc.id,
+            data: commentData,
+            formattedDate: formattedDate,
+            timestamp: timestamp,
+          };
+        })
+        .sort((a, b) => b.timestamp - a.timestamp);
 
       setComments(comments);
     } catch (error) {
@@ -107,28 +119,31 @@ export const CommentsScreen = ({ navigation, route }) => {
       <View style={{ flex: 1 }}>
         <Image source={{ uri: uri }} style={styles.photo} />
 
-        <FlatList
-          style={styles.listComments}
-          keyExtractor={(item, index) => item.id}
-          data={comments}
-          renderItem={({ item }) => (
-            <View style={styles.wrapper}>
-              <View style={styles.user}>
-                <Text style={styles.userName}>
-                  {item.data.login.substring(0, 1).toUpperCase()}
-                </Text>
-              </View>
-              <View style={styles.commentContainer}>
-                <Text style={styles.comment}>{item.data.comment}</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            style={styles.listComments}
+            keyExtractor={(item, index) => item.id}
+            data={comments}
+            renderItem={({ item }) => (
+              <View style={styles.wrapper}>
+                <View style={styles.user}>
+                  <Text style={styles.userName}>
+                    {item.data.login.substring(0, 1).toUpperCase()}
+                  </Text>
+                </View>
+                <View style={styles.commentContainer}>
+                  <Text style={styles.comment}>{item.data.comment}</Text>
 
-                <View style={styles.dateContainer}>
-                  <Text style={styles.date}>{item.formattedDate}</Text>
+                  <View style={styles.dateContainer}>
+                    <Text style={styles.date}>{item.formattedDate}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        ></FlatList>
-
+            )}
+          ></FlatList>
+        )}
         {/*FlatList- це замість ul та .map */}
       </View>
       <View style={styles.inputContainer}>
