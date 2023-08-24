@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, TextInput, FlatList, Keyboard, Text } from "react-native";
+import {
+  Image,
+  View,
+  TextInput,
+  FlatList,
+  Keyboard,
+  ActivityIndicator,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
 
 import { collection, getDocs, doc, addDoc } from "firebase/firestore";
+
 import { db } from "../../../config";
 import styles from "./CommentsScreenStyles";
-import { ActivityIndicator } from "react-native";
+import { CommentsUser } from "../../../Components/CommentsUser/CommentsUser";
+import { CommentContainer } from "../../../Components/CommentContainer/CommentContainer";
 
 export const CommentsScreen = ({ navigation, route }) => {
   const [comment, setComment] = useState("");
@@ -105,7 +114,7 @@ export const CommentsScreen = ({ navigation, route }) => {
             timestamp: timestamp,
           };
         })
-        .sort((a, b) => b.timestamp - a.timestamp);
+        .sort((a, b) => a.timestamp - b.timestamp);
 
       setComments(comments);
     } catch (error) {
@@ -126,22 +135,22 @@ export const CommentsScreen = ({ navigation, route }) => {
             style={styles.listComments}
             keyExtractor={(item, index) => item.id}
             data={comments}
-            renderItem={({ item }) => (
-              <View style={styles.wrapper}>
-                <View style={styles.user}>
-                  <Text style={styles.userName}>
-                    {item.data.login.substring(0, 1).toUpperCase()}
-                  </Text>
+            renderItem={({ item }) =>
+              item.data.login !== login ? (
+                <View style={styles.wrapper}>
+                  <CommentsUser item={item} />
+                  <CommentContainer item={item} />
                 </View>
-                <View style={styles.commentContainer}>
-                  <Text style={styles.comment}>{item.data.comment}</Text>
-
-                  <View style={styles.dateContainer}>
-                    <Text style={styles.date}>{item.formattedDate}</Text>
-                  </View>
+              ) : (
+                <View style={styles.wrapper}>
+                  <CommentContainer item={item} />
+                  <CommentsUser
+                    item={item}
+                    style={{ marginLeft: 16, marginRight: 0 }}
+                  />
                 </View>
-              </View>
-            )}
+              )
+            }
           ></FlatList>
         )}
         {/*FlatList- це замість ul та .map */}
