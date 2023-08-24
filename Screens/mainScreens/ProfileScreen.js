@@ -67,7 +67,10 @@ export function ProfileScreen({ navigation }) {
           userPosts.push({ id: postId, data: postData, comments: comments });
         }
 
-        setUserPosts(userPosts);
+        const userPostsSort = userPosts.sort(
+          (a, b) => b.data.timestamp - a.data.timestamp
+        );
+        setUserPosts(userPostsSort);
         setIsLoading(false);
         console.log("Subscribed to user posts");
       });
