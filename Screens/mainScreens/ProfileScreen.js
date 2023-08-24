@@ -105,7 +105,12 @@ export function ProfileScreen({ navigation }) {
         </View>
         <View style={styles.viewContent}>
           <Text style={styles.userName}>{login}</Text>
-          {isLoading ? (
+          {userPosts.length < 1 ? (
+            <View style={styles.plug}>
+              <Text style={styles.plugText}>Ви ще не додали жодного фото.</Text>
+              <Text style={styles.plugText}> Саме час почати.</Text>
+            </View>
+          ) : isLoading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             <FlatList

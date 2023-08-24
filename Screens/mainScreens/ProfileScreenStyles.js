@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     height: "100%",
     width: "100%",
-
   },
   imageContainer: {
     position: "absolute",
@@ -76,6 +75,19 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     letterSpacing: 0.3,
     color: "#212121",
+  },
+
+  plug: {
+    marginTop: 34,
+    alignItems: "center",
+  },
+  plugText: {
+    color: "orange",
+    fontStyle: "normal",
+    fontSize: 20,
+    fontWeight: "400",
+    lineHeight: 35,
+    letterSpacing: 0.3,
   },
   list: {
     flex: 1,
