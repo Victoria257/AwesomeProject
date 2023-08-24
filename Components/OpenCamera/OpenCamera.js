@@ -6,8 +6,6 @@ import * as Location from "expo-location";
 import styles from "./OpenCameraStyles.js";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
-const API_KEY_MAPS = "AIzaSyB2EZJ-QcKl55jdlq6Sp8FLXbcbUIz6RNg";
-
 export default function OpenCamera({
   photo,
   setPhoto,

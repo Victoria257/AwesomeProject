@@ -4,7 +4,7 @@
     "slug": "AwesomeProject",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/camera-png.webp",
+    "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,10 +17,15 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/camera-png.webp"
+        // "backgroundColor": "#ffffff"
       },
-      "package": "com.viktoria25.AwesomeProject"
+      "package": "com.viktoria25.AwesomeProject",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB2EZJ-QcKl55jdlq6Sp8FLXbcbUIz6RNg"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
