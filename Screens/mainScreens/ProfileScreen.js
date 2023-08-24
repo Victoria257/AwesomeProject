@@ -28,6 +28,7 @@ import { authSignOutUser } from "../../redux/auth/authOperations";
 import styles from "./ProfileScreenStyles";
 import addSvg from "../../images/add.svg.js";
 import { ActivityIndicator } from "react-native";
+import MessageCircleIcon from "../../Components/MessageCircleIcon";
 
 export function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
@@ -141,11 +142,14 @@ export function ProfileScreen({ navigation }) {
                               });
                             }}
                           >
-                            <Feather
-                              name="message-circle"
+                            <MessageCircleIcon
                               size={24}
-                              color="#BDBDBD"
+                              color={commentsLength > 0 ? "#FF6C00" : null}
+                              borderColor={
+                                commentsLength > 0 ? null : "#BDBDBD"
+                              }
                             />
+
                             <Text style={{ color: "#BDBDBD" }}>
                               {commentsLength}
                             </Text>

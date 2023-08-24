@@ -31,11 +31,11 @@ export const Post = ({ posts, navigation }) => {
                     });
                   }}
                 >
-                  {commentsLength > 0 ? (
-                    <MessageCircleIcon size={24} color="#FF6C00" />
-                  ) : (
-                    <Feather name="message-circle" size={24} color="#BDBDBD" />
-                  )}
+                  <MessageCircleIcon
+                    size={24}
+                    color={commentsLength > 0 ? "#FF6C00" : null}
+                    borderColor={commentsLength > 0 ? null : "#BDBDBD"}
+                  />
                   <Text
                     style={{
                       color: commentsLength > 0 ? "#212121" : "#BDBDBD",
