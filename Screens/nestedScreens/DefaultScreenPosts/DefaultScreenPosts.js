@@ -18,8 +18,7 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const { email, login, photoURL } = useSelector((state) => state.auth);
-
+  const { email, login, photoURL, userId } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
@@ -30,6 +29,9 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
     console.log("route.paramsUse", route.params);
     getAllPost();
   }, [route.params]);
+
+  console.log("userId", userId);
+  console.log("photoURL", photoURL);
 
   const getAllPost = async () => {
     console.log("getAll");

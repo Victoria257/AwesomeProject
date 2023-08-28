@@ -27,6 +27,10 @@ export const authSlice = createSlice({
       ...state,
       photoURL: payload.photoURL,
     }),
+    authStateDelPhoto: (state) => ({
+      ...state,
+      photoURL: null,
+    }),
     authSignOut: () => initialState,
   },
 });

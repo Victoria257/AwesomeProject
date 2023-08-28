@@ -14,7 +14,12 @@ import {
   signOut,
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 import { auth, storage } from "../../config";
 import { authSlice } from "./authSlice";
@@ -137,8 +142,18 @@ export const uploadUserPhoto =
       const uploadTask = await uploadBytes(storageRef, photoBlob);
 
       const fileUrl = await getDownloadURL(storageRef);
+      console.log("fileUrl", fileUrl);
       console.log("File uploaded successfully. URL:");
+      const currentUser = auth.currentUser;
+      console.log("currentUser(uploadUserPhoto)", currentUser);
+
+      await updateProfile(currentUser, {
+        photoURL: fileUrl,
+      });
+
       const updateUserSuccess = auth.currentUser;
+
+      console.log("updateUserSuccess", updateUserSuccess);
 
       dispatch(
         authSlice.actions.authStateAddPhoto({
@@ -155,3 +170,30 @@ export const uploadUserPhoto =
       showToast("Помилка. Спробуйте ще.");
     }
   };
+
+export const deleteUserPhoto = (userId) => async (dispatch, getState) => {
+  try {
+    const storageRef = ref(storage, `usersPhoto/${userId}`);
+
+    // Видалення фото з Firebase Storage
+    await deleteObject(storageRef);
+
+    // Оновлення посилання на фото у користувача та у Redux
+    const currentUser = auth.currentUser;
+    console.log("currentUser(deleteUserPhoto)", currentUser);
+
+    await updateProfile(currentUser, {
+      photoURL: null,
+    });
+
+    const updateCurrentUser = auth.currentUser;
+    console.log("updateCurrentUser(deleteUserPhoto)", updateCurrentUser);
+
+    dispatch(authSlice.actions.authStateDelPhoto());
+
+    showToast("Фото успішно видалено!");
+  } catch (error) {
+    console.log("error", error);
+    showToast("Помилка. Спробуйте ще.");
+  }
+};

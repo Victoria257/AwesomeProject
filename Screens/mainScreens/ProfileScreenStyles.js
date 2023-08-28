@@ -31,14 +31,20 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
 
-  addButton: {
+  addDelButton: {
     position: "absolute",
     zIndex: 3,
     bottom: 18,
-    right: -12,
-    width: 25,
-    height: 25,
+    right: -17,
+    width: 35,
+    height: 35,
+    padding: 5,
   },
+  delButton: {
+    backgroundColor: "#fff",
+    borderRadius: 50,
+  },
+
   logoutButton: {
     position: "absolute",
     zIndex: 3,

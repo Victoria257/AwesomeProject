@@ -28,6 +28,7 @@ import { authSlice } from "../../redux/auth/authSlice";
 import { auth, db, storage } from "../../config";
 import {
   authSignOutUser,
+  deleteUserPhoto,
   uploadUserPhoto,
 } from "../../redux/auth/authOperations";
 import styles from "./ProfileScreenStyles";
@@ -114,6 +115,12 @@ export function ProfileScreen({ navigation }) {
     }
   };
 
+  const delPhoto = () => {
+    console.log("push delButton");
+    setSelectedImage(null);
+    dispatch(deleteUserPhoto(userId));
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -129,8 +136,20 @@ export function ProfileScreen({ navigation }) {
               }}
               style={styles.image}
             />
-            <TouchableOpacity style={styles.addButton} onPress={addPhoto}>
-              <SvgXml xml={addSvg} width={25} height={25} />
+            <TouchableOpacity
+              style={styles.addDelButton}
+              onPress={photoURL ? delPhoto : addPhoto}
+            >
+              {photoURL ? (
+                <Feather
+                  name="x-circle"
+                  size={25}
+                  color="#BDBDBD"
+                  style={styles.delButton}
+                />
+              ) : (
+                <SvgXml xml={addSvg} width={25} height={25} />
+              )}
             </TouchableOpacity>
           </View>
           <TouchableOpacity
