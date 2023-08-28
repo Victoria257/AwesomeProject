@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   Text,
@@ -23,20 +24,29 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { SvgXml } from "react-native-svg";
 
-import { db } from "../../config";
-import { authSignOutUser } from "../../redux/auth/authOperations";
+import { authSlice } from "../../redux/auth/authSlice";
+import { auth, db, storage } from "../../config";
+import {
+  authSignOutUser,
+  uploadUserPhoto,
+} from "../../redux/auth/authOperations";
 import styles from "./ProfileScreenStyles";
 import addSvg from "../../images/add.svg.js";
 import { ActivityIndicator } from "react-native";
 import MessageCircleIcon from "../../Components/MessageCircleIcon";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 
 export function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  dispatch = useDispatch();
-  const { userId, login } = useSelector((state) => state.auth);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [newPhoto, setNewPhoto] = useState(null);
 
+  const { userId, login, photoURL } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
   useEffect(() => {
     getUserPosts();
   }, []);
@@ -81,6 +91,29 @@ export function ProfileScreen({ navigation }) {
     }
   };
 
+  const addPhoto = async () => {
+    try {
+      // код для вибору зображення з галереї або камери.
+      //const result = await ImagePicker.launchCameraAsync  - для селфі
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+      // Перевірка на успішний вибір зображення
+      if (!result.canceled) {
+        setSelectedImage(result.assets[0].uri);
+
+        const response = await fetch(result.assets[0].uri);
+        const photoBlob = await response.blob();
+
+        dispatch(uploadUserPhoto(userId, photoBlob));
+      }
+    } catch (error) {
+      console.log("Error selecting image:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -90,8 +123,13 @@ export function ProfileScreen({ navigation }) {
       >
         <View style={styles.imageContainer}>
           <View style={styles.imageWrapper}>
-            <Image style={styles.image} />
-            <TouchableOpacity style={styles.addButton}>
+            <Image
+              source={{
+                uri: photoURL ? photoURL : selectedImage ? selectedImage : null,
+              }}
+              style={styles.image}
+            />
+            <TouchableOpacity style={styles.addButton} onPress={addPhoto}>
               <SvgXml xml={addSvg} width={25} height={25} />
             </TouchableOpacity>
           </View>

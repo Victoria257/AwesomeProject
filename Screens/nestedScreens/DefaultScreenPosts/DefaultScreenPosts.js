@@ -12,12 +12,14 @@ import { Post } from "../../../Components/Post/Post";
 
 import styles from "./DefaultScreenPostsStyles";
 import { ActivityIndicator } from "react-native";
+import { Image } from "react-native";
 
 export const DefaultScreenPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const { email, login } = useSelector((state) => state.auth);
+  const { email, login, photoURL } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     getAllPost();
@@ -82,7 +84,11 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
     <View style={styles.container}>
       <View style={styles.userContainer}>
         <View style={styles.userPhoto}>
-          <Feather name="user" size={24} color="black" />
+          {photoURL ? (
+            <Image source={{ uri: photoURL }} style={styles.userImage} />
+          ) : (
+            <Feather name="user" size={24} color="black" />
+          )}
         </View>
         <View style={styles.userData}>
           <Text style={styles.userName}>{login}</Text>

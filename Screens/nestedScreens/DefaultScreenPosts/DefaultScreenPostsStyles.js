@@ -35,6 +35,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  userImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+  },
   userData: {
     marginLeft: 8,
   },

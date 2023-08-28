@@ -14,8 +14,9 @@ import {
   signOut,
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-import { auth } from "../../config";
+import { auth, storage } from "../../config";
 import { authSlice } from "./authSlice";
 import { authSignOut } from "./authSlice";
 import { useSelector } from "react-redux";
@@ -61,6 +62,7 @@ export const authSignUpUser =
           userId: updateUserSuccess.uid,
           login: updateUserSuccess.displayName,
           email: updateUserSuccess.email,
+          photoURL: updateUserSuccess.photoURL,
         })
       );
     } catch (error) {
@@ -113,6 +115,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
             userId: user.uid,
             login: user.displayName,
             email: user.email,
+            photoURL: user.photoURL,
           })
         );
         dispatch(authSlice.actions.authStateChange({ stateChange: true }));
@@ -122,3 +125,33 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
     console.log("error", error);
   }
 };
+
+export const uploadUserPhoto =
+  (userId, photoBlob) => async (dispatch, getState) => {
+    try {
+      // Створюємо посилання на папку у Storage, де будуть зберігатися фотографії користувачів
+      const storageRef = ref(storage, `usersPhoto/${userId}`);
+
+      // Завантажуємо файл на сервер Firebase Storage
+
+      const uploadTask = await uploadBytes(storageRef, photoBlob);
+
+      const fileUrl = await getDownloadURL(storageRef);
+      console.log("File uploaded successfully. URL:");
+      const updateUserSuccess = auth.currentUser;
+
+      dispatch(
+        authSlice.actions.authStateAddPhoto({
+          photoURL: updateUserSuccess.photoURL,
+          userId: updateUserSuccess.uid,
+          login: updateUserSuccess.displayName,
+          email: updateUserSuccess.email,
+        })
+      );
+
+      showToast("Фото успішно завантажено!");
+    } catch (error) {
+      console.log("error", error);
+      showToast("Помилка. Спробуйте ще.");
+    }
+  };

@@ -29,25 +29,9 @@ export const CreatePostScreen = ({ navigation }) => {
 
   useEffect(() => {
     console.log("locationUse", location);
-    (async () => {
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log("location.coords", JSON.stringify(location.coords));
 
-      const latitude = location.coords.latitude;
-      const longitude = location.coords.longitude;
+    getLocation();
 
-      const geocode = await Location.reverseGeocodeAsync({
-        latitude,
-        longitude,
-      });
-
-      if (geocode && geocode.length > 0) {
-        setGeoCode(
-          geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
-        );
-      }
-    })();
     return () => {
       setGeoCode("");
       setLocation("");
@@ -75,6 +59,26 @@ export const CreatePostScreen = ({ navigation }) => {
       ),
     });
   }, [navigation]);
+
+  const getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    console.log("location.coords", JSON.stringify(location.coords));
+
+    const latitude = location.coords.latitude;
+    const longitude = location.coords.longitude;
+
+    const geocode = await Location.reverseGeocodeAsync({
+      latitude,
+      longitude,
+    });
+
+    if (geocode && geocode.length > 0) {
+      setGeoCode(
+        geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
+      );
+    }
+  };
 
   const onChangeTitle = (text) => {
     setTitle(text);
@@ -129,9 +133,8 @@ export const CreatePostScreen = ({ navigation }) => {
       setIsButtonPressed(true);
 
       if (location) {
-        setIsLoading(true);
         await uploadPhotoToServer();
-      }
+      } else await getLocation();
       setPhoto("");
       setTitle("");
       setAddress("");
@@ -158,7 +161,6 @@ export const CreatePostScreen = ({ navigation }) => {
             photo={photo}
             setPhoto={setPhoto}
             location={location}
-            setLocation={setLocation}
             setAddress={setAddress}
             navigation={navigation}
           />

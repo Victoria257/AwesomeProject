@@ -10,7 +10,6 @@ export default function OpenCamera({
   photo,
   setPhoto,
   location,
-  setLocation,
   setAddress,
   navigation,
 }) {

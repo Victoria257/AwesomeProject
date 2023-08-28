@@ -16,5 +16,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
+  photo: {
+    width: 28,
+    height: 28,
+    borderRadius: 50,
+  },
 });
 export default styles;

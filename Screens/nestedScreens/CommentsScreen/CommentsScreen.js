@@ -24,7 +24,7 @@ export const CommentsScreen = ({ navigation, route }) => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { uri, postId } = route.params;
-  const { login } = useSelector((state) => state.auth);
+  const { login, photoURL } = useSelector((state) => state.auth);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,10 +62,11 @@ export const CommentsScreen = ({ navigation, route }) => {
 
     Keyboard.dismiss();
     if (comment) {
-      createPost({ comment, login });
+      createPost({ comment, login, photoURL });
       setComment("");
     } else {
       console.log("sendComment - wrong");
+      setIsLoading(false);
       return;
     }
   };
@@ -114,7 +115,7 @@ export const CommentsScreen = ({ navigation, route }) => {
             timestamp: timestamp,
           };
         })
-        .sort((a, b) => a.timestamp - b.timestamp);
+        .sort((a, b) => b.timestamp - a.timestamp);
 
       setComments(comments);
     } catch (error) {
