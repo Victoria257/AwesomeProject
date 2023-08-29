@@ -31,7 +31,6 @@ export const DefaultScreenPosts = ({ navigation, route }) => {
   }, [route.params]);
 
   console.log("userId", userId);
-  console.log("photoURL", photoURL);
 
   const getAllPost = async () => {
     console.log("getAll");

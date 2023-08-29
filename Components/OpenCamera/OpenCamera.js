@@ -65,11 +65,14 @@ export default function OpenCamera({
   }
 
   const takePhoto = async () => {
+    console.log("takePhoto:", new Date());
     console.log("takePhoto");
-    console.log("location", location);
     if (camera) {
       const { uri } = await camera.takePictureAsync();
+      console.log("Before saving photo to library:", new Date());
+
       await MediaLibrary.createAssetAsync(uri);
+      console.log("After saving photo to library:", new Date());
 
       setPhoto(uri);
     }
@@ -84,7 +87,12 @@ export default function OpenCamera({
   };
 
   return (
-    <Camera style={styles.camera} ref={setCamera} type={type}>
+    <Camera
+      style={styles.camera}
+      ref={setCamera}
+      type={type}
+      autoFocus={Camera.Constants.AutoFocus.on}
+    >
       {photo ? (
         <View style={styles.takePhotoContainer}>
           <Image source={{ uri: photo }} style={styles.preview} />

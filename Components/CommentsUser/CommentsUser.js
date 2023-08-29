@@ -4,7 +4,6 @@ import { View } from "react-native";
 
 import styles from "./CommentsUserStyles";
 import { Image } from "react-native";
-import { useSelector } from "react-redux";
 
 export const CommentsUser = ({ item, style }) => {
   return (
