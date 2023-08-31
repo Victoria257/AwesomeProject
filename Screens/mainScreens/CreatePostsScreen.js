@@ -31,11 +31,6 @@ export const CreatePostScreen = ({ navigation }) => {
     console.log("locationUse", location);
 
     getLocation();
-
-    return () => {
-      setGeoCode("");
-      setLocation("");
-    };
   }, []);
 
   React.useLayoutEffect(() => {
@@ -61,6 +56,7 @@ export const CreatePostScreen = ({ navigation }) => {
   }, [navigation]);
 
   const getLocation = async () => {
+    console.log("getLocation");
     const location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     console.log("location.coords", JSON.stringify(location.coords));
@@ -98,6 +94,7 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   const uploadPhotoToServer = async () => {
+    console.log("uploadPhotoToServer");
     try {
       const response = await fetch(photo);
       const file = await response.blob();
@@ -128,28 +125,32 @@ export const CreatePostScreen = ({ navigation }) => {
   const sendPhoto = async () => {
     console.log("sendPhoto");
     console.log("location", location);
+    console.log("location.coords(sendPhoto)", location.coords);
     try {
       setIsLoading(true);
       setIsButtonPressed(true);
 
-      if (location) {
+      if (location.coords) {
         await uploadPhotoToServer();
         setPhoto("");
         setTitle("");
         setAddress("");
-        setIsButtonPressed(false);
       } else {
+        console.log("location-2", location);
+        console.log("location.coords(sendPhoto)-2", location.coords);
         await getLocation();
-         if (location) {
-           await uploadPhotoToServer();
-           setPhoto("");
-           setTitle("");
-           setAddress("");
-           setIsButtonPressed(false);
-         } 
+        console.log("location-3", location);
+        console.log("location.coords(sendPhoto)-3", location.coords);
+        if (location.coords) {
+          await uploadPhotoToServer();
+          setPhoto("");
+          setTitle("");
+          setAddress("");
+        } else console.log("no location");
       }
     } catch (error) {
       console.error("Помилка при відправці фото на сервер:", error);
+    } finally {
       setIsButtonPressed(false);
       setIsLoading(false);
     }
