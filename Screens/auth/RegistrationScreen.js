@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   Image,
@@ -12,12 +14,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import styles from "./RegistrationAndLoginScreenStyles";
-import { useState } from "react";
 import { SvgXml } from "react-native-svg";
+import { Feather } from "@expo/vector-icons";
 import addSvg from "../../images/add.svg.js";
-import { useDispatch } from "react-redux";
+
 import { authSignUpUser } from "../../redux/auth/authOperations";
+import styles from "./RegistrationAndLoginScreenStyles";
 
 export function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -26,6 +28,7 @@ export function RegistrationScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isButtonShowPress, setIsButtonShowPress] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -34,12 +37,36 @@ export function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
-  const registerForm = () => {
-    dispatch(authSignUpUser({ email, password, login }));
+  const onPressRegisterForm = () => {
+    dispatch(authSignUpUser({ email, password, login, selectedImage }));
     console.log({ login, email, password });
     setEmail("");
     setLogin("");
     setPassword("");
+    setSelectedImage(null);
+  };
+
+  const addPhoto = async () => {
+    try {
+      console.log("addPhoto");
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+      console.log("1");
+      if (!result.canceled) {
+        setSelectedImage(result.assets[0].uri);
+        console.log("result.assets[0].uri", result.assets[0].uri);
+      } else console.log("result.canceled");
+    } catch (error) {
+      console.log("Error selecting image:", error);
+    }
+  };
+
+  const delPhoto = () => {
+    console.log("push delButton");
+    setSelectedImage(null);
   };
 
   return (
@@ -56,9 +83,26 @@ export function RegistrationScreen({ navigation }) {
               marginBottom: isShowKeyboard ? -176 : 0,
             }}
           >
-            <Image style={styles.image} />
-            <TouchableOpacity style={styles.addButton}>
-              <SvgXml xml={addSvg} width={25} height={25} />
+            <Image
+              source={{
+                uri: selectedImage ? selectedImage : null,
+              }}
+              style={styles.image}
+            />
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={selectedImage ? delPhoto : addPhoto}
+            >
+              {selectedImage ? (
+                <Feather
+                  name="x-circle"
+                  size={25}
+                  color="#BDBDBD"
+                  style={styles.delButton}
+                />
+              ) : (
+                <SvgXml xml={addSvg} width={25} height={25} />
+              )}
 
               {/* <Image source={require("../images/add.png")} /> */}
             </TouchableOpacity>
@@ -139,7 +183,7 @@ export function RegistrationScreen({ navigation }) {
                   <View style={styles.buttonRegisterBox}>
                     <TouchableOpacity
                       style={styles.buttonRegister}
-                      onPress={registerForm}
+                      onPress={onPressRegisterForm}
                     >
                       <Text style={styles.buttonRegisterText}>
                         Зареєструватися

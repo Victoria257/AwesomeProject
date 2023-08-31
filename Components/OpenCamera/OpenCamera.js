@@ -67,6 +67,7 @@ export default function OpenCamera({
   const takePhoto = async () => {
     console.log("takePhoto:", new Date());
     console.log("takePhoto");
+    console.log("before takePhoto:", new Date());
     if (camera) {
       const { uri } = await camera.takePictureAsync();
       console.log("Before saving photo to library:", new Date());

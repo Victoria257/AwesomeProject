@@ -17,8 +17,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/camera-png.webp"
-        // "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/camera.png",
+        "backgroundColor": "#ffffff"
       },
       "package": "com.viktoria25.AwesomeProject",
       "config": {

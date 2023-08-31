@@ -138,7 +138,16 @@ export const CreatePostScreen = ({ navigation }) => {
         setTitle("");
         setAddress("");
         setIsButtonPressed(false);
-      } else await getLocation();
+      } else {
+        await getLocation();
+         if (location) {
+           await uploadPhotoToServer();
+           setPhoto("");
+           setTitle("");
+           setAddress("");
+           setIsButtonPressed(false);
+         } 
+      }
     } catch (error) {
       console.error("Помилка при відправці фото на сервер:", error);
       setIsButtonPressed(false);

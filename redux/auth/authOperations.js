@@ -31,7 +31,7 @@ const showToast = (message) => {
 };
 
 export const authSignUpUser =
-  ({ email, password, login }) =>
+  ({ email, password, login, selectedImage }) =>
   async (dispatch, getState) => {
     if (!email || !password || !login) {
       showToast("Всі поля є обов'язкові!");
@@ -53,14 +53,34 @@ export const authSignUpUser =
 
       const currentUser = auth.currentUser;
       console.log("currentUser(register)", currentUser);
+      console.log("currentUser.uid", currentUser.uid);
 
-      await updateProfile(currentUser, {
+      const response = await fetch(selectedImage);
+
+      const photoBlob = await response.blob();
+      console.log("before");
+      const storageRef = ref(storage, `usersPhoto/${currentUser.uid}`);
+      console.log("after");
+      // Завантажуємо файл на сервер Firebase Storage
+
+      const upload = await uploadBytes(storageRef, photoBlob);
+
+      const imageUrl = await getDownloadURL(storageRef);
+
+      console.log("photo uploaded successfully.");
+      const updateCurrentUser = auth.currentUser;
+
+      await updateProfile(updateCurrentUser, {
         displayName: login,
+        photoURL: imageUrl,
       });
 
-      const updateUserSuccess = auth.currentUser;
+      // console.log("updateCurrentUser", updateCurrentUser);
+
+      const updateUserSuccess = updateCurrentUser;
       console.log(updateUserSuccess.uid);
       console.log(updateUserSuccess.displayName);
+      console.log("updateUserSuccess", updateUserSuccess);
 
       dispatch(
         authSlice.actions.updateUserProfile({
@@ -187,7 +207,7 @@ export const deleteUserPhoto = (userId) => async (dispatch, getState) => {
     });
 
     const updateCurrentUser = auth.currentUser;
-    console.log("updateCurrentUser(deleteUserPhoto)", updateCurrentUser);
+    // console.log("updateCurrentUser(deleteUserPhoto)", updateCurrentUser);
 
     dispatch(authSlice.actions.authStateDelPhoto());
 
