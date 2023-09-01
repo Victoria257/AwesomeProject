@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -54,40 +54,57 @@ export const authSignUpUser =
       const currentUser = auth.currentUser;
       console.log("currentUser(register)", currentUser);
       console.log("currentUser.uid", currentUser.uid);
+      if (selectedImage) {
+        const response = await fetch(selectedImage);
 
-      const response = await fetch(selectedImage);
+        const photoBlob = await response.blob();
+        console.log("before");
+        const storageRef = ref(storage, `usersPhoto/${currentUser.uid}`);
+        console.log("after");
+        // Завантажуємо файл на сервер Firebase Storage
 
-      const photoBlob = await response.blob();
-      console.log("before");
-      const storageRef = ref(storage, `usersPhoto/${currentUser.uid}`);
-      console.log("after");
-      // Завантажуємо файл на сервер Firebase Storage
+        const upload = await uploadBytes(storageRef, photoBlob);
 
-      const upload = await uploadBytes(storageRef, photoBlob);
+        const imageUrl = await getDownloadURL(storageRef);
 
-      const imageUrl = await getDownloadURL(storageRef);
+        console.log("photo uploaded successfully.");
+        const updateCurrentUser = auth.currentUser;
 
-      console.log("photo uploaded successfully.");
-      const updateCurrentUser = auth.currentUser;
+        await updateProfile(updateCurrentUser, {
+          displayName: login,
+          photoURL: imageUrl,
+        });
+        console.log("updateCurrentUser", updateCurrentUser);
+        const updateUserSuccess = updateCurrentUser;
+        console.log(updateUserSuccess.uid);
+        console.log(updateUserSuccess.displayName);
+        console.log("updateUserSuccess", updateUserSuccess);
 
-      await updateProfile(updateCurrentUser, {
+        dispatch(
+          authSlice.actions.updateUserProfile({
+            userId: updateUserSuccess.uid,
+            login: updateUserSuccess.displayName,
+            email: updateUserSuccess.email,
+            photoURL: updateUserSuccess.photoURL,
+          })
+        );
+      }
+      await updateProfile(currentUser, {
         displayName: login,
-        photoURL: imageUrl,
       });
 
-      // console.log("updateCurrentUser", updateCurrentUser);
-
-      const updateUserSuccess = updateCurrentUser;
+      console.log("currentUser(без фото)", currentUser);
+      const updateUserSuccess = currentUser;
       console.log(updateUserSuccess.uid);
       console.log(updateUserSuccess.displayName);
-      console.log("updateUserSuccess", updateUserSuccess);
+      console.log("updateUserSuccess(без фото)", updateUserSuccess);
 
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: updateUserSuccess.uid,
           login: updateUserSuccess.displayName,
           email: updateUserSuccess.email,
-          photoURL: updateUserSuccess.photoURL,
+          photoURL: null,
         })
       );
     } catch (error) {
