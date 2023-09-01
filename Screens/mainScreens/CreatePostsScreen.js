@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Keyboard, ToastAndroid } from "react-native";
+import {
+  View,
+  Text,
+  Keyboard,
+  ToastAndroid,
+  ActivityIndicator,
+} from "react-native";
+import { useSelector } from "react-redux";
 
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
@@ -7,14 +14,13 @@ import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { format } from "date-fns";
 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+
+import { db, storage } from "../../config.js";
+
 import styles from "./CreatePostsScreenStyles";
 import OpenCamera from "../../Components/OpenCamera/OpenCamera";
-
-import { collection, addDoc } from "firebase/firestore";
-import { db, storage } from "../../config.js";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useSelector } from "react-redux";
-import { ActivityIndicator } from "react-native";
 
 export const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
@@ -25,6 +31,7 @@ export const CreatePostScreen = ({ navigation }) => {
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentStatusLocation, setCurrentStatusLocation] = useState({});
+  const [showLoader, setShowLoader] = useState(true);
 
   const { userId, login } = useSelector((state) => state.auth);
 
@@ -32,6 +39,14 @@ export const CreatePostScreen = ({ navigation }) => {
     (async () => {
       await onPermissionLocation();
     })();
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 3000);
+
+    return () => {
+      // При очищенні компонента видаляємо таймер
+      clearTimeout(timer);
+    };
   }, []);
 
   React.useLayoutEffect(() => {
@@ -175,22 +190,30 @@ export const CreatePostScreen = ({ navigation }) => {
   };
 
   return currentStatusLocation !== "granted" ? (
-    <View>
-      <Text>
+    <View style={styles.containerLocation}>
+      <Text style={styles.textLocation}>
+        {"   "}
         Ви не надали доступ до локаціїї, що є необхідним для додавання фото в
-        галерею
+        галерею.
       </Text>
-      <TouchableOpacity onPress={onPermissionLocation()}>
-        <Text> Надати дозвіл</Text>
+      <TouchableOpacity
+        onPress={onPermissionLocation}
+        style={styles.buttonLocation}
+      >
+        <Text style={styles.textButtonLocation}> Надати дозвіл</Text>
       </TouchableOpacity>
     </View>
   ) : !location ? (
-    <View>
-      <Text>Відсутній доступ до локації</Text>
-      <TouchableOpacity onPress={getLocation()}>
-        <Text> Знайти локацію</Text>
-      </TouchableOpacity>
-    </View>
+    showLoader ? (
+      <ActivityIndicator size="large" color="#0000ff" />
+    ) : (
+      <View style={styles.containerLocation}>
+        <Text style={styles.textLocation}>Відсутній доступ до локації.</Text>
+        <TouchableOpacity onPress={getLocation} style={styles.buttonLocation}>
+          <Text style={styles.textButtonLocation}> Знайти локацію</Text>
+        </TouchableOpacity>
+      </View>
+    )
   ) : (
     <View style={styles.container}>
       <View style={styles.wrapper}>

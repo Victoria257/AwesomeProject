@@ -96,6 +96,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  containerLocation: {
+    marginTop: 50,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  textLocation: {
+    fontSize: 17,
+    fontWeight: "500",
+    lineHeight: 22,
+    letterSpacing: -0.408,
+  },
+  buttonLocation: {
+    marginTop: 30,
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: 200,
+    padding: 10,
+    backgroundColor: "orange",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textButtonLocation: {
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: "500",
+    lineHeight: 22,
+    letterSpacing: -0.408,
+  },
 });
 
 export default styles;
