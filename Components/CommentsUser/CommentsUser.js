@@ -6,6 +6,8 @@ import styles from "./CommentsUserStyles";
 import { Image } from "react-native";
 
 export const CommentsUser = ({ item, style }) => {
+  const user = item.data.userId;
+  console.log("user(CommentsUser)", user);
   return (
     <View style={[styles.user, style]}>
       {item.data.photoURL ? (

@@ -24,7 +24,7 @@ export const CommentsScreen = ({ navigation, route }) => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { uri, postId } = route.params;
-  const { login, photoURL } = useSelector((state) => state.auth);
+  const { login, photoURL, userId } = useSelector((state) => state.auth);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,7 +62,7 @@ export const CommentsScreen = ({ navigation, route }) => {
 
     Keyboard.dismiss();
     if (comment) {
-      createPost({ comment, login, photoURL });
+      createPost({ comment, login, photoURL, userId });
       setComment("");
     } else {
       console.log("sendComment - wrong");

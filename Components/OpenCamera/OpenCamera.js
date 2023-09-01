@@ -22,13 +22,6 @@ export default function OpenCamera({
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === "granted");
-
-      const { statusLocation } =
-        await Location.requestForegroundPermissionsAsync();
-      if (statusLocation !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
     })();
   }, []);
 

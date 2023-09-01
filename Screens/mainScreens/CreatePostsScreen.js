@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Keyboard } from "react-native";
+import { View, Text, Keyboard, ToastAndroid } from "react-native";
 
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
@@ -24,13 +24,14 @@ export const CreatePostScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStatusLocation, setCurrentStatusLocation] = useState({});
 
   const { userId, login } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log("locationUse", location);
-
-    getLocation();
+    (async () => {
+      await onPermissionLocation();
+    })();
   }, []);
 
   React.useLayoutEffect(() => {
@@ -55,10 +56,31 @@ export const CreatePostScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER
+    );
+  };
+
+  const onPermissionLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("status", status);
+    setCurrentStatusLocation(status);
+    if (status !== "granted") {
+      showToast("Дозвіл на доступ до локації НЕ надано!");
+      console.log("Permission to access location was denied");
+      return;
+    }
+    console.log("location(onPermissionLocation)", location);
+
+    await getLocation();
+  };
+
   const getLocation = async () => {
     console.log("getLocation");
-    const location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
+    let location = await Location.getCurrentPositionAsync({});
     console.log("location.coords", JSON.stringify(location.coords));
 
     const latitude = location.coords.latitude;
@@ -74,6 +96,8 @@ export const CreatePostScreen = ({ navigation }) => {
         geocode[0].city + ", " + geocode[0].region + ", " + geocode[0].country
       );
     }
+
+    setLocation(location);
   };
 
   const onChangeTitle = (text) => {
@@ -125,29 +149,17 @@ export const CreatePostScreen = ({ navigation }) => {
   const sendPhoto = async () => {
     console.log("sendPhoto");
     console.log("location", location);
-    console.log("location.coords(sendPhoto)", location.coords);
+
     try {
       setIsLoading(true);
       setIsButtonPressed(true);
 
-      if (location.coords) {
+      if (location) {
         await uploadPhotoToServer();
         setPhoto("");
         setTitle("");
         setAddress("");
-      } else {
-        console.log("location-2", location);
-        console.log("location.coords(sendPhoto)-2", location.coords);
-        await getLocation();
-        console.log("location-3", location);
-        console.log("location.coords(sendPhoto)-3", location.coords);
-        if (location.coords) {
-          await uploadPhotoToServer();
-          setPhoto("");
-          setTitle("");
-          setAddress("");
-        } else console.log("no location");
-      }
+      } else console.log("no location");
     } catch (error) {
       console.error("Помилка при відправці фото на сервер:", error);
     } finally {
@@ -162,7 +174,24 @@ export const CreatePostScreen = ({ navigation }) => {
     setAddress("");
   };
 
-  return (
+  return currentStatusLocation !== "granted" ? (
+    <View>
+      <Text>
+        Ви не надали доступ до локаціїї, що є необхідним для додавання фото в
+        галерею
+      </Text>
+      <TouchableOpacity onPress={onPermissionLocation()}>
+        <Text> Надати дозвіл</Text>
+      </TouchableOpacity>
+    </View>
+  ) : !location ? (
+    <View>
+      <Text>Відсутній доступ до локації</Text>
+      <TouchableOpacity onPress={getLocation()}>
+        <Text> Знайти локацію</Text>
+      </TouchableOpacity>
+    </View>
+  ) : (
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.photo}>
@@ -221,11 +250,13 @@ export const CreatePostScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.delete} onPress={delData}>
-          <Feather name="trash-2" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
-      </View>
+      {!isLoading && (
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.delete} onPress={delData}>
+            <Feather name="trash-2" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
