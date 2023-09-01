@@ -12,6 +12,7 @@ import {
   ImageBackground,
   ScrollView,
   Keyboard,
+  ToastAndroid,
 } from "react-native";
 import {
   collection,
@@ -37,6 +38,10 @@ import { ActivityIndicator } from "react-native";
 import MessageCircleIcon from "../../Components/MessageCircleIcon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
+
+const showToast = (message) => {
+  ToastAndroid.showWithGravity(message, ToastAndroid.LONG, ToastAndroid.CENTER);
+};
 
 export function ProfileScreen({ navigation }) {
   const [userPosts, setUserPosts] = useState([]);
@@ -121,6 +126,11 @@ export function ProfileScreen({ navigation }) {
     dispatch(deleteUserPhoto(userId));
   };
 
+  const onDelPost = () => {
+    console.log("push delPhoto");
+    showToast("Кпонка поки не працює-чекайте оновлення!");
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -186,6 +196,17 @@ export function ProfileScreen({ navigation }) {
                         style={styles.photo}
                       />
                     </View>
+                    <TouchableOpacity
+                      onPress={onDelPost}
+                      style={styles.delPhoto}
+                    >
+                      <Feather
+                        name="x-circle"
+                        size={25}
+                        color="#BDBDBD"
+                        style={styles.delButtonPhoto}
+                      />
+                    </TouchableOpacity>
                     <View>
                       <Text style={styles.title}>{data.title}</Text>
                       <View style={styles.signatureContainer}>

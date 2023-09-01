@@ -107,9 +107,23 @@ const styles = StyleSheet.create({
   },
 
   photo: {
+    position: "relative",
     width: "100%",
     aspectRatio: 4 / 3,
     borderRadius: 8,
+  },
+  delPhoto: {
+    position: "absolute",
+    zIndex: 3,
+    bottom: 65,
+    right: 0,
+    width: 35,
+    height: 35,
+    padding: 5,
+  },
+  delButtonPhoto: {
+    backgroundColor: "#fff",
+    borderRadius: 50,
   },
 
   title: {
