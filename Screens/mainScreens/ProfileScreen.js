@@ -20,6 +20,8 @@ import {
   query,
   onSnapshot,
   getDocs,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 import { Feather } from "@expo/vector-icons";
@@ -126,9 +128,16 @@ export function ProfileScreen({ navigation }) {
     dispatch(deleteUserPhoto(userId));
   };
 
-  const onDelPost = () => {
+  const onDelPost = async (postId) => {
     console.log("push delPhoto");
-    showToast("Кпонка поки не працює-чекайте оновлення!");
+
+    try {
+      const postRef = doc(db, "posts", postId);
+      await deleteDoc(postRef);
+      console.log("Post successfully deleted");
+    } catch (error) {
+      console.error("Error deleting post: ", error);
+    }
   };
 
   return (
@@ -197,7 +206,7 @@ export function ProfileScreen({ navigation }) {
                       />
                     </View>
                     <TouchableOpacity
-                      onPress={onDelPost}
+                      onPress={() => onDelPost(item.id)}
                       style={styles.delPhoto}
                     >
                       <Feather
@@ -232,7 +241,7 @@ export function ProfileScreen({ navigation }) {
                               {commentsLength}
                             </Text>
                           </TouchableOpacity>
-                          <TouchableOpacity
+                          {/* <TouchableOpacity
                             style={styles.likesContainer}
                             onPress={() => {
                               navigation.navigate("Comments", {
@@ -247,7 +256,7 @@ export function ProfileScreen({ navigation }) {
                               color="#BDBDBD"
                             />
                             <Text style={{ color: "#BDBDBD" }}>0</Text>
-                          </TouchableOpacity>
+                          </TouchableOpacity> */}
                         </View>
                         <TouchableOpacity
                           style={styles.locationContainer}

@@ -10,8 +10,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 export const CommentsUser = ({ item, style }) => {
   const [photoUrl, setPhotoUrl] = useState(null);
   const user = item.data.userId;
-  console.log("item(CommentsUser)", item);
-  console.log("user(CommentsUser)", user);
+
   useEffect(() => {
     // Отримуємо посилання на фото з Firebase Storage
     const storageRef = ref(storage, `usersPhoto/${user}`);

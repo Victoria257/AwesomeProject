@@ -33,10 +33,6 @@ const showToast = (message) => {
 export const authSignUpUser =
   ({ email, password, login, selectedImage }) =>
   async (dispatch, getState) => {
-    if (!email || !password || !login) {
-      showToast("Всі поля є обов'язкові!");
-      return;
-    }
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.length > 0) {
@@ -44,42 +40,25 @@ export const authSignUpUser =
         showToast("Така електронна адреса в базі вже існує");
         return;
       }
-
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-
       const currentUser = auth.currentUser;
-      console.log("currentUser(register)", currentUser);
-      console.log("currentUser.uid", currentUser.uid);
       if (selectedImage) {
         const response = await fetch(selectedImage);
-
         const photoBlob = await response.blob();
-        console.log("before");
         const storageRef = ref(storage, `usersPhoto/${currentUser.uid}`);
-        console.log("after");
         // Завантажуємо файл на сервер Firebase Storage
-
         const upload = await uploadBytes(storageRef, photoBlob);
-
         const imageUrl = await getDownloadURL(storageRef);
-
-        console.log("photo uploaded successfully.");
         const updateCurrentUser = auth.currentUser;
-
         await updateProfile(updateCurrentUser, {
           displayName: login,
           photoURL: imageUrl,
         });
-        console.log("updateCurrentUser", updateCurrentUser);
         const updateUserSuccess = updateCurrentUser;
-        console.log(updateUserSuccess.uid);
-        console.log(updateUserSuccess.displayName);
-        console.log("updateUserSuccess", updateUserSuccess);
-
         dispatch(
           authSlice.actions.updateUserProfile({
             userId: updateUserSuccess.uid,
@@ -92,13 +71,7 @@ export const authSignUpUser =
       await updateProfile(currentUser, {
         displayName: login,
       });
-
-      console.log("currentUser(без фото)", currentUser);
       const updateUserSuccess = currentUser;
-      console.log(updateUserSuccess.uid);
-      console.log(updateUserSuccess.displayName);
-      console.log("updateUserSuccess(без фото)", updateUserSuccess);
-
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: updateUserSuccess.uid,
@@ -107,19 +80,16 @@ export const authSignUpUser =
           photoURL: null,
         })
       );
+      return { status: "success", message: "Ви успішно зареєструвалися!" };
     } catch (error) {
       console.log("error", error);
-      showToast("Помилка. Спробуйте ще.");
+      return { status: "error", message: "Помилка реєстрації. Спробуйте ще." };
     }
   };
 
 export const authSignInUser =
   ({ email, password }) =>
   async (dispatch, getState) => {
-    if (!email || !password) {
-      showToast("Всі поля є обов'язкові!");
-      return;
-    }
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
 

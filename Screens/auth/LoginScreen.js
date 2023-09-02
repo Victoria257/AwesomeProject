@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   ImageBackground,
   Text,
@@ -8,11 +9,10 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  ToastAndroid,
 } from "react-native";
 
 import styles from "./RegistrationAndLoginScreenStyles";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { authSignInUser } from "../../redux/auth/authOperations";
 
 export function LoginScreen({ navigation }) {
@@ -24,15 +24,30 @@ export function LoginScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER
+    );
+  };
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
-  const enterForm = () => {
-    dispatch(authSignInUser({ email, password }));
-    setEmail("");
-    setPassword("");
+  const enterForm = async () => {
+    if (!email || !password) {
+      showToast("Всі поля є обов'язкові!");
+      return;
+    }
+
+    const loginResult = await dispatch(authSignInUser({ email, password }));
+    if (loginResult) {
+      setEmail("");
+      setPassword("");
+    }
   };
 
   return (

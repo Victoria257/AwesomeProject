@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  ToastAndroid,
 } from "react-native";
 
 import { SvgXml } from "react-native-svg";
@@ -32,18 +33,37 @@ export function RegistrationScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER
+    );
+  };
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
-  const onPressRegisterForm = () => {
-    dispatch(authSignUpUser({ email, password, login, selectedImage }));
+  const onPressRegisterForm = async () => {
+    if (!email || !password || !login) {
+      showToast("Всі поля є обов'язкові!");
+      return;
+    }
+
+    const registrationResult = await dispatch(
+      authSignUpUser({ email, password, login, selectedImage })
+    );
     console.log({ login, email, password });
-    setEmail("");
-    setLogin("");
-    setPassword("");
-    setSelectedImage(null);
+    if (registrationResult.status === "success") {
+      setEmail("");
+      setLogin("");
+      setPassword("");
+      setSelectedImage(null);
+    } else {
+      showToast(registrationResult.message);
+    }
   };
 
   const addPhoto = async () => {
